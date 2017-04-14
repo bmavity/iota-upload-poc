@@ -26,29 +26,31 @@ export default function initalize() {
       ],
     })
   .run()
-  
+
   uppy.on('core:upload-started', (fileId, upload) => {
     upload.abort()
     uppy.getPlugin('Tus').pauseUpload(fileId)
     uppy.getPlugin('Tus').pauseResume('pauseAll')
     uppy.getPlugin('DashboardUI').pauseAll()
     upload.onChunkCompleted((chunkSize, bytesAccepted, bytesTotal) => {
+      // eslint-disable-next-line no-console
       console.log(`Chunk size: ${chunkSize}, bytes accepted: ${bytesAccepted}, bytes total: ${bytesTotal}`)
     })
   })
-  
   uppy.on('core:upload-progress', (data) => {
+    // eslint-disable-next-line no-console
     console.log(data.id, data.bytesUploaded, data.bytesTotal)
     uppy.getPlugin('DashboardUI').pauseAll()
     uppy.getPlugin('Tus').pauseResume('pauseAll')
   })
-  
+
   uppy.on('core:pause-all', () => {
+    // eslint-disable-next-line no-console
     console.log('all paused')
   })
-  
+
   uppy.on('core:resume-all', () => {
+    // eslint-disable-next-line no-console
     console.log('all resumed')
   })
 }
-  
