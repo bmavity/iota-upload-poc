@@ -22,8 +22,10 @@
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.1",
     "babel-loader": "^6.4.1",
+    "babel-plugin-flow-react-proptypes": "^1.1.0",
     "babel-preset-env": "^1.3.3",
     "babel-preset-flow": "^6.23.0",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-compat": "^1.0.2",
@@ -42,6 +44,11 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "compression": "^1.6.2",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-hot-loader": "next",
+    "tus-node-server": "^0.2.3",
+    "uppy": "^0.15.0"
   }
 }
