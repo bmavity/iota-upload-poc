@@ -7,6 +7,8 @@ import { FileUploader } from '../../../modules/upload'
 import { WalletSidebar } from '../../../modules/wallet'
 import { appActions, connect, getAppState } from '../appState'
 
+import styles from './App.css'
+
 
 export default class App extends Component {
   constructor() {
@@ -42,10 +44,75 @@ export default class App extends Component {
           <main>
             <AppHeader hasSidebarOpen={this.state.hasSidebarOpen} {... actions} />
 
-            <FileUploader />
+            <section className={styles.send__section}>
+              <div className={styles.send}>
+                <div className={styles.send__header}>
+                  <p className={styles.send__headerTitle}>Upload File</p>
+                </div>
+                <div className={styles.send__body}>
+                  <div className="row">
+                    <div className={`col-xs-12 ${styles.send__bodyTitle}`}>
+                      <p className={styles.send__bodyBalance}>
+                        <img alt="IOTA logo" className={styles.send__logo} src="static/images/logo-black.png" />
+                        Balance:
+                        <span className="label label-primary" id="iota__balance">0</span>
+                      </p>
+                    </div>
+
+                    <div className={`col-xs-12 ${styles.appContent}`}>
+                      <div className={styles.fileUploader}>
+                        <FileUploader />
+                      </div>
+                      <div className={styles.paymentInformation}>
+                        <h3>My Wallet</h3>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
           </main>
         </Sidebar>
       </div>
     )
   }
 }
+
+
+/*
+
+<div className="col-xs-6">
+  <div className="form-group">
+    <label htmlFor="name">Your Name</label>
+    <input type="text" maxLength="16" className="form-control" id="name" placeholder="Enter Name" />
+  </div>
+</div>
+
+<div className="col-xs-6">
+  <div className="form-group">
+    <label htmlFor="value">Value</label>
+    <input type="number" className="form-control" id="value" placeholder="Value to Send" />
+  </div>
+</div>
+
+<div className="col-xs-12">
+  <div className="form-group">
+    <label htmlFor="address">Recipient Address</label>
+<input type="text" className="form-control" id="address" placeholder="IOTA address of recipient" />
+  </div>
+</div>
+
+<div className="col-xs-12">
+  <div className="form-group">
+    <label htmlFor="message">Text Area</label>
+    <textarea id="message" className="form-control" rows="3" placeholder="Message to send" />
+  </div>
+</div>
+
+<div className={styles.send__button}>
+  <button className="btn btn-success btn-lg" id="submit">Submit</button>
+</div>
+*/

@@ -1,0 +1,76 @@
+
+.appContent {
+  background-color: #fff;
+  display: flex;
+}
+
+.fileUploader {
+  flex-grow: 1;
+}
+
+.paymentInformation {
+  width: 250px;
+}
+
+.send {
+  max-width: 800px;
+  width: 100%;
+  margin: 50px auto;
+  border-collapse: collapse;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: -180px;
+}
+
+.send__header {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  background-color: #000;
+  border-bottom: 4px solid #9ea7af;
+  font-size: 38px;
+  font-weight: 100;
+  color: #fff;
+  padding: 24px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align:middle;
+  text-align: center;
+}
+
+.send__body {
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 24px;
+}
+
+.send__bodyTitle {
+  font-size: 32px;
+  font-weight: 100;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 20px 0 40px;
+  vertical-align:middle;
+  text-align: center;
+}
+
+.send__logo {
+  width: 35px;
+  height: 35px;
+}
+
+.send__button {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#send__waiting {
+  display: none;
+}
+
+.send__waitingTitle {
+  font-size: 32px;
+  font-weight: 100;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  vertical-align:middle;
+  text-align: center;
+  border-bottom: 4px solid #ccc;
+}

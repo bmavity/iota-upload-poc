@@ -14,7 +14,6 @@ export default class WalletSidebar extends Component {
   render() {
     return (
       <div className={styles.fileUploader}>
-        <h1>Metered Uploading</h1>
         <button id="select-files">Select Files</button>
       </div>
     )
