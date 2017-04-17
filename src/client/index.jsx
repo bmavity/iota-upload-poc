@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 
 import { AppContainer } from 'react-hot-loader'
 
-import App from './app'
+import { App } from './core/App'
 import { APP_CONTAINER_SELECTOR } from '../shared/config'
 
 import initializeUploader from './uploadInitializer'
@@ -23,9 +23,9 @@ initializeUploader()
 
 if (module.hot) {
   // flow-disable-next-line
-  module.hot.accept('./app', () => {
+  module.hot.accept('./core/App/components/App', () => {
     // eslint-disable-next-line global-require
-    const NextApp = require('./app').default
+    const NextApp = require('./core/App').default.App
     ReactDOM.render(wrapApp(NextApp), rootEl)
     initializeUploader()
   })

@@ -26,6 +26,7 @@
     "babel-preset-env": "^1.3.3",
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-plugin-compat": "^1.0.2",
@@ -38,16 +39,20 @@
     "nodemon": "^1.11.0",
     "pm2": "^2.4.4",
     "rimraf": "^2.6.1",
+    "style-loader": "^0.16.1",
     "webpack": "^2.3.3",
     "webpack-dev-server": "^2.4.2"
   },
   "dependencies": {
     "babel-polyfill": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
     "compression": "^1.6.2",
     "express": "^4.15.2",
+    "iota.lib.js": "^0.2.6",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-hot-loader": "next",
+    "react-sidebar": "^2.3.1",
     "tus-node-server": "^0.2.3",
     "uppy": "^0.15.0"
   }

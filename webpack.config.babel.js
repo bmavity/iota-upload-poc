@@ -11,6 +11,9 @@ export default {
     'react-hot-loader/patch',
     './src/client',
   ],
+  externals: [{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}',
+  }],
   output: {
     filename: 'js/bundle.js',
     path: path.resolve(__dirname, 'dist'),
@@ -19,6 +22,21 @@ export default {
   module: {
     rules: [
       { test: /\.(js|jsx)$/, use: 'babel-loader', exclude: /node_modules/ },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              sourceMap: true,
+              importLoaders: 1,
+              localIdentName: '[name]__[local]__[hash:base64:5]',
+            },
+          },
+        ],
+      },
     ],
   },
   devtool: isProd ? false : 'source-map',

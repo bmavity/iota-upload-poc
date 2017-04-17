@@ -6,3 +6,4 @@ dist/
 lib/
 files/
 coverage/
+iota.wallet.config.js
