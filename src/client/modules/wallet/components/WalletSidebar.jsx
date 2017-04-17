@@ -1,17 +1,15 @@
-import React, { Component } from 'react'
-
-import { getAccountBalance } from '../wallet'
+import React, { Component, PropTypes } from 'react'
 
 import styles from './WalletSidebar.css'
 
 
 export default class WalletSidebar extends Component {
-  state = {
-    companySeed: '',
+  static propTypes = {
+    setCompanySeed: PropTypes.func.isRequired,
   }
 
-  getWalletBallance() {
-    console.log(getAccountBalance(this.state.companySeed))
+  state = {
+    companySeed: '',
   }
 
   updateSeed(evt) {
@@ -20,18 +18,23 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
+    const { setCompanySeed } = this.props
+
     return (
       <div className={styles.sidebar}>
+        <h2>Company Wallet</h2>
         <ul className={styles.sidebarList}>
           <li className={`${styles.sidebarItem} active`}> {
             // eslint-disable-next-line jsx-a11y/href-no-hash
-          } <a href="#" className={styles.sidebarAnchor} data-toggle="collapse" data-target="#setSeed" aria-expanded="false" aria-controls="setSeed">My Seed</a>
+          } <a href="#" className={styles.sidebarAnchor} data-toggle="collapse" data-target="#setSeed" aria-expanded="false" aria-controls="setSeed">Seed to Receive Payment</a>
             <div className="collapse in" id="setSeed">
               <div className="well" id="enterSeed">
                 <div className="form-group">
                   <input type="password" value={this.state.companySeed} className="form-control" placeholder="Company Seed" onChange={evt => this.updateSeed(evt)} />
                 </div>
-                <button type="button" id="seedSubmit" className="btn btn-default" onClick={() => this.getWalletBallance()}>Submit</button>
+                <button type="button" id="seedSubmit" className="btn btn-default" onClick={() => setCompanySeed(this.state.companySeed)}>
+                  Set Seed
+                </button>
               </div>
             </div>
           </li>
