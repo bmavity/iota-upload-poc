@@ -4,6 +4,8 @@ let toNotify
 let state = {
   companyBalance: null,
   companySeed: null,
+  paymentBalance: null,
+  paymentSeed: null,
 }
 
 function updateState(updatedState) {
@@ -34,6 +36,20 @@ export const appActions = {
         updateState(mergeState({ companySeed: null }))
       } else {
         updateState(mergeState({ companyBalance: balance }))
+      }
+    })
+  },
+
+  setPaymentSeed(seed) {
+    updateState(mergeState({
+      paymentSeed: seed,
+    }))
+
+    getAccountBalance(seed, (err, balance) => {
+      if (err) {
+        updateState(mergeState({ paymentSeed: null }))
+      } else {
+        updateState(mergeState({ paymentBalance: balance }))
       }
     })
   },

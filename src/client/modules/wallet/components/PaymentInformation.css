@@ -1,0 +1,21 @@
+
+.paymentInformation {
+  padding: 0 20px 0 0;
+}
+
+.send__logo {
+  width: 20px;
+  height: 20px;
+}
+
+.send__bodyTitle {
+  font-size: 20px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
+  text-align: center;
+}
+
+.setSeed {
+  text-align: center;
+  margin: 20px 0;
+}

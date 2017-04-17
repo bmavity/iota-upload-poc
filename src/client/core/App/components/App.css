@@ -4,12 +4,9 @@
   display: flex;
 }
 
-.fileUploader {
-  flex-grow: 1;
-}
-
+.fileUploader,
 .paymentInformation {
-  width: 250px;
+  flex-grow: 1;
 }
 
 .send {
@@ -40,20 +37,6 @@
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   padding: 24px;
-}
-
-.send__bodyTitle {
-  font-size: 32px;
-  font-weight: 100;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  margin: 20px 0 40px;
-  vertical-align:middle;
-  text-align: center;
-}
-
-.send__logo {
-  width: 35px;
-  height: 35px;
 }
 
 .send__button {

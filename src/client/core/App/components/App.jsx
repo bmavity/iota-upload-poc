@@ -4,7 +4,7 @@ import Sidebar from 'react-sidebar'
 
 import AppHeader from './AppHeader'
 import { FileUploader } from '../../../modules/upload'
-import { WalletSidebar } from '../../../modules/wallet'
+import { PaymentInformation, WalletSidebar } from '../../../modules/wallet'
 import { appActions, connect, getAppState } from '../appState'
 
 import styles from './App.css'
@@ -51,29 +51,18 @@ export default class App extends Component {
                 </div>
                 <div className={styles.send__body}>
                   <div className="row">
-                    <div className={`col-xs-12 ${styles.send__bodyTitle}`}>
-                      <p className={styles.send__bodyBalance}>
-                        <img alt="IOTA logo" className={styles.send__logo} src="static/images/logo-black.png" />
-                        Balance:
-                        <span className="label label-primary" id="iota__balance">0</span>
-                      </p>
-                    </div>
-
                     <div className={`col-xs-12 ${styles.appContent}`}>
+                      <div className={styles.paymentInformation}>
+                        <PaymentInformation {... this.state.appState} {... appActions} />
+                      </div>
                       <div className={styles.fileUploader}>
                         <FileUploader />
                       </div>
-                      <div className={styles.paymentInformation}>
-                        <h3>My Wallet</h3>
-                      </div>
                     </div>
-
                   </div>
-
                 </div>
               </div>
             </section>
-
           </main>
         </Sidebar>
       </div>
