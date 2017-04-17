@@ -1,8 +1,9 @@
 // @flow
-
 import React, { Component } from 'react'
 import Sidebar from 'react-sidebar'
 
+import AppHeader from './AppHeader'
+import { FileUploader } from '../../../modules/upload'
 import { WalletSidebar } from '../../../modules/wallet'
 import { appActions, connect, getAppState } from '../appState'
 
@@ -23,12 +24,13 @@ export default class App extends Component {
   }
 
   setSidebarVisibility(isOpen: boolean) {
-    console.log(isOpen)
     this.setState(state => Object.assign({}, state, { hasSidebarOpen: isOpen }))
   }
 
   render() {
-    const sidebarActiveClass = this.state.hasSidebarOpen ? 'active' : ''
+    const actions = {
+      setSidebarVisibility: isOpen => this.setSidebarVisibility(isOpen),
+    }
     return (
       <div>
         <Sidebar
@@ -38,28 +40,9 @@ export default class App extends Component {
           sidebar={(<WalletSidebar {... this.state.appState} {... appActions} />)}
         >
           <main>
-            <header className="header">
-              <p className="header__title">
-                <span>
-                  <img alt="IOTA logo" className="header__logo" src="static/images/logo.png" />
-                </span>
-                File Uploader
-              </p>
-              <nav>
-                <div className="nav-right hidden-xs">{
-                  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-                  } <div className={`button ${sidebarActiveClass}`} onClick={() => this.setSidebarVisibility(!this.state.hasSidebarOpen)}>
-                    <div className="bar top" />
-                    <div className="bar middle" />
-                    <div className="bar bottom" />
-                  </div>
-                </div>
-              </nav>
-            </header>
+            <AppHeader hasSidebarOpen={this.state.hasSidebarOpen} {... actions} />
 
-            <h1>Metered Uploading</h1>
-            <button id="select-files">Select Files</button>
-            <button onClick={() => this.setSidebarVisibility(true)}>Wallet</button>
+            <FileUploader />
           </main>
         </Sidebar>
       </div>
