@@ -2,6 +2,7 @@ import { getAccountBalance } from '../../modules/wallet'
 
 let toNotify
 let state = {
+  companyBalance: null,
   companySeed: null,
 }
 
@@ -30,9 +31,9 @@ export const appActions = {
 
     getAccountBalance(seed, (err, balance) => {
       if (err) {
-        updateState({ companySeed: null })
+        updateState(mergeState({ companySeed: null }))
       } else {
-        updateState({ companyBalance: balance })
+        updateState(mergeState({ companyBalance: balance }))
       }
     })
   },

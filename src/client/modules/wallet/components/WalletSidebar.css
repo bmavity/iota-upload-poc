@@ -2,9 +2,10 @@
 .sidebar {
   background-color: #2D3142;
   box-sizing: border-box;
+  color: #fff;
   font-family: 'Ubuntu', sans-serif;
   height: 100%;
-  padding-top: 1px;
+  padding: 1px 20px 0;
   width: 400px;
 }
 
@@ -17,7 +18,7 @@
   margin: 0;
   list-style: none;
   position: relative;
-  margin-top: 150px;
+  margin-top: 20px;
   text-align: center;
 }
 
@@ -104,4 +105,8 @@
 .sidebarAnchor:active {
   color: #fff;
   text-decoration: none;
+}
+
+.companyBalance {
+  color: #000;
 }
