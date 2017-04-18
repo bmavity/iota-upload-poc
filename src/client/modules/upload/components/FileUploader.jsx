@@ -1,5 +1,5 @@
 // @flow
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 
 import styles from './FileUploader.css'
 
@@ -18,18 +18,25 @@ const CanUpload = () =>
   </div>
 
 
-export default class WalletSidebar extends Component {
-  static propTypes = {
-    companySeed: PropTypes.string,
-    paymentAddress: PropTypes.string,
-  }
-
+export default class FileUploader extends Component {
   state = {
   }
 
+  props: {
+    paymentAddress: ?string,
+    paymentBalance: ?number,
+    paymentSeed: ?string,
+  }
+
   render() {
-    const canUpload = this.props.paymentAddress && this.props.companySeed
+    const { paymentAddress, paymentBalance, paymentSeed } = this.props
+    const hasPaymentAddress = paymentAddress !== null
+    const canPay = paymentSeed !== null
+      && paymentBalance !== null
+      && parseInt(paymentBalance, 10) > 0
+    const canUpload = hasPaymentAddress && canPay
     const DisplayComponent = canUpload ? CanUpload : CannotUpload
+
     return (
       <div className={styles.fileUploader}>
         <h3>File Information</h3>

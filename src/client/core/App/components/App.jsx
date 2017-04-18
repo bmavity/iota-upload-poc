@@ -56,7 +56,7 @@ export default class App extends Component {
                         <PaymentInformation {... this.state.appState} {... appActions} />
                       </div>
                       <div className={styles.fileUploader}>
-                        <FileUploader />
+                        <FileUploader {... this.state.appState} {... appActions} />
                       </div>
                     </div>
                   </div>
