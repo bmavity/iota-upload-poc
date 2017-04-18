@@ -36,7 +36,7 @@ export const appActions = {
       if (err) {
         updateState(mergeState({ companySeed: null }))
       } else {
-        updateState(mergeState({ companyBalance: balance }))
+        updateState(mergeState({ companyBalance: balance, paymentAddress: 'hi' }))
       }
     })
   },

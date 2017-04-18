@@ -3,19 +3,26 @@ import React, { Component } from 'react'
 
 import AddressGenerationMessage from './AddressGenerationMessage'
 import CompanySeedEntry from './CompanySeedEntry'
+import PaymentAddressAndBalance from './PaymentAddressAndBalance'
 
 import styles from './WalletSidebar.css'
 
 
 export default class WalletSidebar extends Component {
+  static defaultProps = {
+    companyBalance: null,
+    companySeed: null,
+    paymentAddress: null,
+  }
+
   state = {
     companySeed: '',
   }
 
   props: {
-    companyBalance: number,
-    companySeed: string,
-    paymentAddress: string,
+    companyBalance?: number,
+    companySeed?: string,
+    paymentAddress?: string,
     setCompanySeed: Function,
   }
 
@@ -25,12 +32,9 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
-    const { companyBalance, paymentAddress, companySeed, setCompanySeed } = this.props
+    const { companyBalance, companySeed, paymentAddress, setCompanySeed } = this.props
 
     const isGeneratingAddress = paymentAddress === null && companySeed !== null
-
-    const balanceActiveClass = companySeed ? 'active' : ''
-    const balanceCollapseClass = companySeed ? 'in' : ''
 
     const actions = {
       setCompanySeed: () => setCompanySeed(this.state.companySeed),
@@ -42,21 +46,18 @@ export default class WalletSidebar extends Component {
         <h2>Company Wallet</h2>
         <ul className={styles.sidebarList}>
           <CompanySeedEntry
-            hasSeedSet={companySeed !== null} companySeed={this.state.companySeed} {... actions}
+            companySeed={this.state.companySeed}
+            hasSeedSet={companySeed !== null}
+            {... actions}
           />
-
-          <AddressGenerationMessage isGeneratingAddress={isGeneratingAddress} />
-
-          <li className={`${styles.sidebarItem} ${balanceActiveClass} ${styles.companyBalance}`}>
-            <div className={`collapse ${balanceCollapseClass}`}>
-              <div className="well">
-                <div className="form-group">
-                  <h3>Balance: <span>{companyBalance}</span></h3>
-                </div>
-              </div>
-            </div>
-          </li>
-
+          <AddressGenerationMessage
+            isGeneratingAddress={isGeneratingAddress}
+            paymentAddress={paymentAddress}
+          />
+          <PaymentAddressAndBalance
+            hasPaymentAddress={paymentAddress !== null}
+            companyBalance={companyBalance}
+          />
         </ul>
       </div>
     )
