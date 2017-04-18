@@ -22,7 +22,7 @@ const PaymentAddress = ({ paymentAddress }: { paymentAddress: ?string }) =>
     <img
       alt="IOTA logo" className={styles.iotaLogo} src="static/images/logo-black.png"
     /> Address:
-    <div>{paymentAddress}</div>
+    <div className={styles.paymentAddress}>{paymentAddress}</div>
   </div>
 
 

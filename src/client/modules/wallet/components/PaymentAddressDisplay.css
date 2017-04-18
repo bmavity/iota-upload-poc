@@ -3,3 +3,8 @@
   width: 25px;
   height: 25px;
 }
+
+.paymentAddress {
+  width: 100%;
+  word-wrap: break-word;
+}

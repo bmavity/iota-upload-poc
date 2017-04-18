@@ -1,4 +1,4 @@
-import { getAccountBalance } from '../../modules/wallet'
+import { generateAddress, getAccountBalance } from '../../modules/wallet'
 
 let toNotify
 let state = {
@@ -32,11 +32,11 @@ export const appActions = {
       companySeed: seed,
     }))
 
-    getAccountBalance(seed, (err, balance) => {
+    generateAddress(seed, (err, paymentAddress) => {
       if (err) {
         updateState(mergeState({ companySeed: null }))
       } else {
-        updateState(mergeState({ companyBalance: balance, paymentAddress: 'hi' }))
+        updateState(mergeState({ paymentAddress }))
       }
     })
   },

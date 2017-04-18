@@ -10,15 +10,14 @@ export function getAccountBalance(seed, cb) {
   wallet.api.getAccountData(seed, (err, accountData) => {
     if (err) return cb(err)
 
-    let address
-    console.log('Account data', accountData)
+    return cb(null, accountData.balance)
+  })
+}
 
-    // Update address
-    if (!address && accountData.addresses[0]) {
-      address = wallet.utils.addChecksum(accountData.addresses[accountData.addresses.length - 1])
-    }
+export function generateAddress(seed, cb) {
+  wallet.api.getNewAddress(seed, { checksum: true }, (err, address) => {
+    if (err) return cb(err)
 
-    const balance = accountData.balance
-    return cb(null, balance)
+    return cb(null, address)
   })
 }
