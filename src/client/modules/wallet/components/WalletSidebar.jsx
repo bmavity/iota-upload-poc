@@ -1,29 +1,33 @@
 // @flow
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 
+import AddressGenerationMessage from './AddressGenerationMessage'
 import CompanySeedEntry from './CompanySeedEntry'
 
 import styles from './WalletSidebar.css'
 
 
 export default class WalletSidebar extends Component {
-  static propTypes = {
-    companyBalance: PropTypes.number.isRequired,
-    companySeed: PropTypes.string.isRequired,
-    setCompanySeed: PropTypes.func.isRequired,
-  }
-
   state = {
     companySeed: '',
   }
 
-  updateSeedValue(evt: any) {
-    const companySeed = evt.target.value
+  props: {
+    companyBalance: number,
+    companySeed: string,
+    paymentAddress: string,
+    setCompanySeed: Function,
+  }
+
+  updateSeedValue(evt: Event & { currentTarget: HTMLInputElement }) {
+    const companySeed = evt.currentTarget.value
     this.setState(() => ({ companySeed }))
   }
 
   render() {
-    const { companyBalance, companySeed, setCompanySeed } = this.props
+    const { companyBalance, paymentAddress, companySeed, setCompanySeed } = this.props
+
+    const isGeneratingAddress = paymentAddress === null && companySeed !== null
 
     const balanceActiveClass = companySeed ? 'active' : ''
     const balanceCollapseClass = companySeed ? 'in' : ''
@@ -41,6 +45,8 @@ export default class WalletSidebar extends Component {
             hasSeedSet={companySeed !== null} companySeed={this.state.companySeed} {... actions}
           />
 
+          <AddressGenerationMessage isGeneratingAddress={isGeneratingAddress} />
+
           <li className={`${styles.sidebarItem} ${balanceActiveClass} ${styles.companyBalance}`}>
             <div className={`collapse ${balanceCollapseClass}`}>
               <div className="well">
@@ -50,28 +56,7 @@ export default class WalletSidebar extends Component {
               </div>
             </div>
           </li>
-          <li className={`${styles.sidebarItem}`}> {
-            // eslint-disable-next-line jsx-a11y/href-no-hash
-          } <a href="#" className={styles.sidebarAnchor} data-toggle="collapse" data-target="#getAddresses" aria-expanded="false" aria-controls="getAddresses">My Addresses</a>
-            <div className="collapse" id="getAddresses">
-              <div className="genAddress__div">
-                <div id="overlay">
-                  <div className="panel panel-danger">
-                    <div className="panel-heading">Generating Address</div>
-                    <div className="panel-body">
-                      <p>
-                        Currently generating your payment address. This can take
-                        anywhere between 1 - 20 minutes
-                        so be patient. Once your address was generated this note will disappear.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <button type="button" id="genAddress" className="btn btn-success">Generate Address</button>
-                <div id="allAddresses" />
-              </div>
-            </div>
-          </li>
+
         </ul>
       </div>
     )

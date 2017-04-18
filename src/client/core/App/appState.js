@@ -4,6 +4,7 @@ let toNotify
 let state = {
   companyBalance: null,
   companySeed: null,
+  paymentAddress: null,
   paymentBalance: null,
   paymentSeed: null,
 }

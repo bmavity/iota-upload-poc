@@ -13,6 +13,10 @@
   color: #fff !important;
 }
 
+.sidebar p {
+  color: #000 !important;
+}
+
 .sidebarList {
   padding: 0;
   margin: 0;
