@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Sidebar from 'react-sidebar'
 
 import AppHeader from './AppHeader'
-import { FileUploader } from '../../../modules/upload'
+import { FileInformation } from '../../../modules/upload'
 import { PaymentInformation, WalletSidebar } from '../../../modules/wallet'
 import { appActions, connect, getAppState } from '../appState'
 
@@ -56,7 +56,7 @@ export default class App extends Component {
                         <PaymentInformation {... this.state.appState} {... appActions} />
                       </div>
                       <div className={styles.fileUploader}>
-                        <FileUploader {... this.state.appState} {... appActions} />
+                        <FileInformation {... this.state.appState} {... appActions} />
                       </div>
                     </div>
                   </div>

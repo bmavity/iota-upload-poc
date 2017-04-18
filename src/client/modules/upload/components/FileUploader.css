@@ -1,4 +1,4 @@
 
-.fileUploader {
-  
+:global(.UppyDashboard-inner) {
+  width: 100% !important;
 }

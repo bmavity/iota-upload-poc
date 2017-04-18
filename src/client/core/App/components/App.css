@@ -4,15 +4,16 @@
   display: flex;
 }
 
-.fileUploader,
-.paymentInformation {
+.fileUploader {
   flex-grow: 1;
 }
 
+.paymentInformation {
+  width: 300px;
+}
+
 .send {
-  max-width: 800px;
-  width: 100%;
-  margin: 50px auto;
+  margin: 50px 200px;
   border-collapse: collapse;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   position: relative;

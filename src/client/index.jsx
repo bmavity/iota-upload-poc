@@ -9,8 +9,6 @@ import { AppContainer } from 'react-hot-loader'
 import { App } from './core/App'
 import { APP_CONTAINER_SELECTOR } from '../shared/config'
 
-import initializeUploader from './uploadInitializer'
-
 const rootEl = document.querySelector(APP_CONTAINER_SELECTOR)
 
 const wrapApp = AppComponent =>
@@ -19,7 +17,6 @@ const wrapApp = AppComponent =>
   </AppContainer>
 
 ReactDOM.render(wrapApp(App), rootEl)
-initializeUploader()
 
 if (module.hot) {
   // flow-disable-next-line
@@ -27,6 +24,5 @@ if (module.hot) {
     // eslint-disable-next-line global-require
     const NextApp = require('./core/App').default.App
     ReactDOM.render(wrapApp(NextApp), rootEl)
-    initializeUploader()
   })
 }
