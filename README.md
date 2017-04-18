@@ -2,8 +2,10 @@
 
 ---
 
-# IOTA Leaderboard: Micropayments and Messaging Example
+# IOTA Uploader: Micropayments Example an IOTA Proof of Concept Application
 
-### IOTA Proof of Concept Application example with tutorial. Please head to the [IOTA Learn Tutorial](https://learn.iota.org/tutorial/payments-and-messaging-leaderboard) for more information.
-
-
+## To Run
+1. `git clone https://github.com/bmavity/iota-upload-poc.git`
+1. `cd iota-upload-poc`
+1. `npm install` or `yarn`
+1. `npm start` or `yarn start`
