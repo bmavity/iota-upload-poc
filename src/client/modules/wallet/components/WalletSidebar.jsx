@@ -3,6 +3,41 @@ import React, { Component, PropTypes } from 'react'
 import styles from './WalletSidebar.css'
 
 
+const SeedEntry = ({ hasSeedSet, companySeed, setCompanySeed, updateSeedValue }) => {
+  const seedActiveClass = hasSeedSet ? '' : 'active'
+  const seedCollapseClass = hasSeedSet ? '' : 'in'
+  const seedValue = hasSeedSet ? '' : companySeed
+
+  return (
+    <li className={`${styles.sidebarItem} ${seedActiveClass}`}>
+      <div className={`collapse ${seedCollapseClass}`}>
+        <div className="well">
+          <div className="form-group">
+            <input
+              type="password"
+              value={seedValue}
+              className="form-control"
+              placeholder="Company Seed"
+              onChange={updateSeedValue}
+            />
+          </div>
+          <button type="button" className="btn btn-default" onClick={setCompanySeed}>
+            Set Seed
+          </button>
+        </div>
+      </div>
+    </li>
+  )
+}
+SeedEntry.propTypes = {
+  // eslint-disable-next-line react/require-default-props
+  companySeed: PropTypes.string,
+  hasSeedSet: PropTypes.bool.isRequired,
+  setCompanySeed: PropTypes.func.isRequired,
+  updateSeedValue: PropTypes.func.isRequired,
+}
+
+
 export default class WalletSidebar extends Component {
   static propTypes = {
     companyBalance: PropTypes.number.isRequired,
@@ -21,34 +56,23 @@ export default class WalletSidebar extends Component {
 
   render() {
     const { companyBalance, companySeed, setCompanySeed } = this.props
-    const seedValue = companySeed ? '' : this.state.companySeed
-    const seedActiveClass = companySeed ? '' : 'active'
-    const seedCollapseClass = companySeed ? '' : 'in'
+
     const balanceActiveClass = companySeed ? 'active' : ''
     const balanceCollapseClass = companySeed ? 'in' : ''
+
+    const actions = {
+      setCompanySeed: () => setCompanySeed(this.state.companySeed),
+      updateSeedValue: evt => this.updateSeedValue(evt),
+    }
 
     return (
       <div className={styles.sidebar}>
         <h2>Company Wallet</h2>
         <ul className={styles.sidebarList}>
-          <li className={`${styles.sidebarItem} ${seedActiveClass}`}>
-            <div className={`collapse ${seedCollapseClass}`}>
-              <div className="well">
-                <div className="form-group">
-                  <input
-                    type="password"
-                    value={seedValue}
-                    className="form-control"
-                    placeholder="Company Seed"
-                    onChange={evt => this.updateSeedValue(evt)}
-                  />
-                </div>
-                <button type="button" className="btn btn-default" onClick={() => setCompanySeed(this.state.companySeed)}>
-                  Set Seed
-                </button>
-              </div>
-            </div>
-          </li>
+          <SeedEntry
+            hasSeedSet={companySeed !== null} companySeed={this.state.companySeed} {... actions}
+          />
+
           <li className={`${styles.sidebarItem} ${balanceActiveClass} ${styles.companyBalance}`}>
             <div className={`collapse ${balanceCollapseClass}`}>
               <div className="well">
@@ -68,8 +92,8 @@ export default class WalletSidebar extends Component {
                     <div className="panel-heading">Generating Address</div>
                     <div className="panel-body">
                       <p>
-                        Currently generating your address. This can take
-                        anywhere between 1 - 20minutes
+                        Currently generating your payment address. This can take
+                        anywhere between 1 - 20 minutes
                         so be patient. Once your address was generated this note will disappear.
                       </p>
                     </div>
