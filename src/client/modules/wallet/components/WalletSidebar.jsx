@@ -1,41 +1,9 @@
+// @flow
 import React, { Component, PropTypes } from 'react'
 
+import CompanySeedEntry from './CompanySeedEntry'
+
 import styles from './WalletSidebar.css'
-
-
-const SeedEntry = ({ hasSeedSet, companySeed, setCompanySeed, updateSeedValue }) => {
-  const seedActiveClass = hasSeedSet ? '' : 'active'
-  const seedCollapseClass = hasSeedSet ? '' : 'in'
-  const seedValue = hasSeedSet ? '' : companySeed
-
-  return (
-    <li className={`${styles.sidebarItem} ${seedActiveClass}`}>
-      <div className={`collapse ${seedCollapseClass}`}>
-        <div className="well">
-          <div className="form-group">
-            <input
-              type="password"
-              value={seedValue}
-              className="form-control"
-              placeholder="Company Seed"
-              onChange={updateSeedValue}
-            />
-          </div>
-          <button type="button" className="btn btn-default" onClick={setCompanySeed}>
-            Set Seed
-          </button>
-        </div>
-      </div>
-    </li>
-  )
-}
-SeedEntry.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  companySeed: PropTypes.string,
-  hasSeedSet: PropTypes.bool.isRequired,
-  setCompanySeed: PropTypes.func.isRequired,
-  updateSeedValue: PropTypes.func.isRequired,
-}
 
 
 export default class WalletSidebar extends Component {
@@ -49,7 +17,7 @@ export default class WalletSidebar extends Component {
     companySeed: '',
   }
 
-  updateSeedValue(evt) {
+  updateSeedValue(evt: any) {
     const companySeed = evt.target.value
     this.setState(() => ({ companySeed }))
   }
@@ -69,7 +37,7 @@ export default class WalletSidebar extends Component {
       <div className={styles.sidebar}>
         <h2>Company Wallet</h2>
         <ul className={styles.sidebarList}>
-          <SeedEntry
+          <CompanySeedEntry
             hasSeedSet={companySeed !== null} companySeed={this.state.companySeed} {... actions}
           />
 
