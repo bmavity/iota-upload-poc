@@ -1,9 +1,11 @@
-import { generateAddress, getAccountBalance } from '../../modules/wallet'
+// @flow
+import { generateAddress, getAccountBalance, makePayment } from '../../modules/wallet'
 
 let toNotify
 let state = {
   companyBalance: null,
   companySeed: null,
+  files: {},
   paymentAddress: null,
   paymentBalance: null,
   paymentSeed: null,
@@ -11,7 +13,9 @@ let state = {
 
 function updateState(updatedState) {
   state = updatedState
-  toNotify(state)
+  if (toNotify) {
+    toNotify(state)
+  }
 }
 
 function mergeState(patch) {
@@ -22,16 +26,21 @@ export function getAppState() {
   return state
 }
 
-export function connect(notifyOfStateChange) {
+export function connect(notifyOfStateChange: (state: any) => void) {
   toNotify = notifyOfStateChange
 }
 
 export const appActions = {
-  makePayment(paymentAmount) {
-    console.log(paymentAmount)
+  makePayment(fileId: string, paymentAmount: number) {
+    updateState(mergeState({
+      files: Object.assign({}, state.files, { fileId: { isProcessingPayment: true } }),
+    }))
+    makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
+      console.log(err)
+    })
   },
 
-  setCompanySeed(seed) {
+  setCompanySeed(seed: string) {
     updateState(mergeState({
       companySeed: seed,
     }))
@@ -45,7 +54,7 @@ export const appActions = {
     })
   },
 
-  setPaymentSeed(seed) {
+  setPaymentSeed(seed: string) {
     updateState(mergeState({
       paymentSeed: seed,
     }))

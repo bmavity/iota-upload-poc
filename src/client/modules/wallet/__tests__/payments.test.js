@@ -13,8 +13,8 @@ function createUpload(onProgress) {
   }
 }
 
-function createPayable(upload) {
-  return new PayableUpload(upload || createUpload())
+function createPayable(fileId, upload) {
+  return new PayableUpload(fileId, upload || createUpload())
 }
 
 describe('PayableUpload, when imported', () => {
@@ -27,7 +27,11 @@ describe('PayableUpload, when created', () => {
   let payable
 
   beforeAll(() => {
-    payable = createPayable()
+    payable = createPayable('a file id')
+  })
+
+  it('should have the proper fileId', () => {
+    expect(payable.fileId).toBe('a file id')
   })
 
   it('should not have any paid bytes', () => {
@@ -45,7 +49,7 @@ describe('PayableUpload, on upload progress', () => {
   beforeAll(() => {
     originalOnProgress = jest.fn()
     const upload = createUpload(originalOnProgress)
-    createPayable(upload)
+    createPayable('file id 1', upload)
 
     upload.options.onProgress(12, 36)
   })
@@ -59,8 +63,10 @@ describe('PayableUpload, on upload progress, with unpaid bytes', () => {
   let upload
 
   beforeAll(() => {
+    appActions.makePayment.mockClear()
+
     upload = createUpload()
-    createPayable(upload)
+    createPayable('a file id 2', upload)
 
     upload.options.onProgress(12, 36)
   })
@@ -70,6 +76,6 @@ describe('PayableUpload, on upload progress, with unpaid bytes', () => {
   })
 
   it('should make payment for unpaid bytes', () => {
-    expect(appActions.makePayment).toBeCalledWith(12)
+    expect(appActions.makePayment).toBeCalledWith('a file id 2', 12)
   })
 })

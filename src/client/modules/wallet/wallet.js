@@ -6,20 +6,19 @@ import { iotaConfig } from '../../../shared/config'
 const wallet = new Iota(iotaConfig)
 
 
-// eslint-disable-next-line import/prefer-default-export
-export function getAccountBalance(seed: string, cb: (err: ?Error, balance: ?number) => void) {
-  wallet.api.getAccountData(seed, (err, accountData) => {
-    if (err) return cb(err)
-
-    return cb(null, accountData.balance)
-  })
-}
-
 export function generateAddress(seed: string, cb: (err: ?Error, address: ?string) => void) {
   wallet.api.getNewAddress(seed, { checksum: true }, (err, address) => {
     if (err) return cb(err)
 
     return cb(null, address)
+  })
+}
+
+export function getAccountBalance(seed: string, cb: (err: ?Error, balance: ?number) => void) {
+  wallet.api.getAccountData(seed, (err, accountData) => {
+    if (err) return cb(err)
+
+    return cb(null, accountData.balance)
   })
 }
 

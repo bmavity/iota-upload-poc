@@ -1,14 +1,10 @@
 import { appActions } from '../../core/App/appState'
 
 
-function makePayment(unpaidBytes) {
-  appActions.makePayment(unpaidBytes)
-}
-
 // eslint-disable-next-line import/prefer-default-export
 export class PayableUpload {
-  constructor(upload) {
-    // this.fileId = fileId
+  constructor(fileId, upload) {
+    this.fileId = fileId
     this.upload = upload
 
     this.bytesPaid = 0
@@ -28,8 +24,12 @@ export class PayableUpload {
     const unpaidBytes = bytesUploaded - this.bytesPaid
     if (unpaidBytes > 0) {
       this.pauseUpload()
-      makePayment(unpaidBytes)
+      this.makePayment(unpaidBytes)
     }
+  }
+
+  makePayment(unpaidBytes) {
+    appActions.makePayment(this.fileId, unpaidBytes)
   }
 
   pauseUpload() {
