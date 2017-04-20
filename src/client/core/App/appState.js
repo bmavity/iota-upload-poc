@@ -27,6 +27,10 @@ export function connect(notifyOfStateChange) {
 }
 
 export const appActions = {
+  makePayment(paymentAmount) {
+    console.log(paymentAmount)
+  },
+
   setCompanySeed(seed) {
     updateState(mergeState({
       companySeed: seed,
