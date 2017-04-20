@@ -31,13 +31,18 @@ export function connect(notifyOfStateChange: (state: any) => void) {
 }
 
 export const appActions = {
-  makePayment(fileId: string, paymentAmount: number) {
+  makePayment(fileId: string, unpaidBytes: number) {
     updateState(mergeState({
       files: Object.assign({}, state.files, { fileId: { isProcessingPayment: true } }),
     }))
-    makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
-      console.log(err)
-    })
+
+    const paymentAmount = parseInt(unpaidBytes, 10) / 1000000
+
+    if (paymentAmount > 0) {
+      makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
+        console.log(err)
+      })
+    }
   },
 
   setCompanySeed(seed: string) {
