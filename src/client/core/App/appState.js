@@ -22,6 +22,15 @@ function mergeState(patch) {
   return Object.assign({}, state, patch)
 }
 
+function updateFile(fileId, paymentId, payment) {
+  const file = state.files[fileId] || { payments: {} }
+  return Object.assign({}, file, {
+    payments: Object.assign({}, file.payments, {
+      [paymentId]: payment,
+    }),
+  })
+}
+
 export function getAppState() {
   return state
 }
@@ -31,18 +40,27 @@ export function connect(notifyOfStateChange: (state: any) => void) {
 }
 
 export const appActions = {
-  makePayment(fileId: string, unpaidBytes: number) {
-    updateState(mergeState({
-      files: Object.assign({}, state.files, { fileId: { isProcessingPayment: true } }),
-    }))
+  makePayment(fileId: string, paymentAmount: number) {
+    const file = state.files[fileId]
+    const payments = (file && file.payments) || {}
+    const paymentId = Object.keys(payments).length + 1
+    const updatedFile = updateFile(fileId, paymentId, {
+      amount: paymentAmount,
+      status: 'processing',
+    })
 
-    const paymentAmount = parseInt(unpaidBytes, 10) / 1000000
+    console.log(file, payments, updatedFile)
+    updateState(mergeState({ files: Object.assign({}, state.files, { [fileId]: updatedFile }) }))
 
-    if (paymentAmount > 0) {
-      makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
-        console.log(err)
-      })
-    }
+    makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
+      updateState(mergeState({
+        files: Object.assign({}, state.files, {
+          [fileId]: updateFile(fileId, paymentId, {
+            status: err ? 'error' : 'pending',
+          }),
+        }),
+      }))
+    })
   },
 
   setCompanySeed(seed: string) {

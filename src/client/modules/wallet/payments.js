@@ -1,5 +1,7 @@
 import { appActions } from '../../core/App/appState'
 
+const bytesForOneIota = 1000000
+
 
 // eslint-disable-next-line import/prefer-default-export
 export class PayableUpload {
@@ -8,6 +10,7 @@ export class PayableUpload {
     this.upload = upload
 
     this.bytesPaid = 0
+    this.bytesPendingPayment = 0
     this.bytesUploaded = 0
     // this.totalBytes = upload.file.size
 
@@ -21,7 +24,9 @@ export class PayableUpload {
   }
 
   addBytesToUpload(bytesUploaded) {
-    const unpaidBytes = bytesUploaded - this.bytesPaid
+    const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
+    const unpaidBytes = bytesUploaded - totalPendingBytes
+
     if (unpaidBytes > 0) {
       this.pauseUpload()
       this.makePayment(unpaidBytes)
@@ -29,18 +34,29 @@ export class PayableUpload {
   }
 
   makePayment(unpaidBytes) {
-    appActions.makePayment(this.fileId, unpaidBytes)
+    const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
+    appActions.makePayment(this.fileId, paymentAmount)
   }
 
   pauseUpload() {
     this.upload.abort()
   }
-}
-
-/*
 
   resumeUpload() {
     this.upload.start()
   }
+
+  updateFileData(fileData) {
+    const paymentTotals = fileData.payments.reduce((totals, payment) => {
+      // eslint-disable-next-line no-param-reassign
+      totals[payment.status] += payment.amount
+      return totals
+    }, {
+      confirmed: 0,
+      pending: 0,
+      processing: 0,
+    })
+    this.bytesPaid = paymentTotals.confirmed
+    this.bytesPendingPayment = paymentTotals.pending + paymentTotals.processing
+  }
 }
-*/

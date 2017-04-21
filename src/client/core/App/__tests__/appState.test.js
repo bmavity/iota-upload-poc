@@ -21,7 +21,7 @@ describe('appActions, when making a payment', () => {
 
     appActions.setCompanySeed('company seed')
     appActions.setPaymentSeed('payment seed')
-    appActions.makePayment('a file id', 57000000)
+    appActions.makePayment('a file id', 57)
   })
 
   it('should have the proper seed', () => {

@@ -64,11 +64,13 @@ describe('PayableUpload, on upload progress, with unpaid bytes', () => {
 
   beforeAll(() => {
     appActions.makePayment.mockClear()
+    const unpaidBytes = 12000000
+    const totalBytes = 36000000
 
     upload = createUpload()
     createPayable('a file id 2', upload)
 
-    upload.options.onProgress(12, 36)
+    upload.options.onProgress(unpaidBytes, totalBytes)
   })
 
   it('should stop upload', () => {
