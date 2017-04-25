@@ -1,7 +1,7 @@
 // @flow
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 
-import styles from './PaymentInformation.css'
+import styles from './CustomerSeedEntry.css'
 
 
 class SeedEntry extends Component {
@@ -25,16 +25,13 @@ class SeedEntry extends Component {
 
     return (
       <div>
-        <div className="form-group">
-          <label htmlFor="address">My wallet seed</label>
-          <input
-            type="password"
-            value={seedValue}
-            className="form-control"
-            placeholder="91 digit seed"
-            onChange={evt => this.updateSeedValue(evt)}
-          />
-        </div>
+        <input
+          type="password"
+          value={seedValue}
+          className="form-control"
+          placeholder="91 digit seed"
+          onChange={evt => this.updateSeedValue(evt)}
+        />
         <div className={styles.setSeed}>
           <button className="btn btn-success" onClick={() => setPaymentSeed(this.state.paymentSeed)}>Set Seed</button>
         </div>
@@ -48,20 +45,18 @@ const WalletLoading = () =>
   <div>Loading...</div>
 
 
-const WalletBalance = ({ paymentBalance }) =>
+const WalletBalance = ({ availableBalance }: { availableBalance: ?number }) =>
   <div>
-    <img
-      alt="IOTA logo" className={styles.send__logo} src="static/images/logo-black.png"
-    /> Balance: <span
-      className="label label-primary"
-    >{paymentBalance}</span>
+    Available <img
+      alt="IOTA logo"
+      className={styles.iotaLogo}
+      src="static/images/logo-black.png"
+    /> Balance:
+    <span className={`label label-primary ${styles.availableBalance}`}>{availableBalance}</span>
   </div>
-WalletBalance.propTypes = {
-  paymentBalance: PropTypes.number.isRequired,
-}
 
 
-const UserSeedEntry = ({ paymentBalance, paymentSeed, setPaymentSeed }: {
+const CustomerSeedEntry = ({ paymentBalance, paymentSeed, setPaymentSeed }: {
     paymentBalance: ?number,
     paymentSeed: ?string,
     setPaymentSeed: (seed: string) => void
@@ -74,12 +69,17 @@ const UserSeedEntry = ({ paymentBalance, paymentSeed, setPaymentSeed }: {
       : WalletBalance
 
   return (
-    <ActiveComponent
-      paymentBalance={paymentBalance}
-      paymentSeed={paymentSeed}
-      setPaymentSeed={setPaymentSeed}
-    />
+    <div className={styles.customerSeedEntry}>
+      <div className="form-group">
+        <label htmlFor="address">Customer Wallet</label>
+        <ActiveComponent
+          availableBalance={paymentBalance}
+          paymentSeed={paymentSeed}
+          setPaymentSeed={setPaymentSeed}
+        />
+      </div>
+    </div>
   )
 }
 
-export default UserSeedEntry
+export default CustomerSeedEntry

@@ -1,8 +1,8 @@
 // @flow
 import React from 'react'
 
-import PaymentAddressDisplay from './PaymentAddressDisplay'
-import UserSeedEntry from './UserSeedEntry'
+import CompanyAddressDisplay from './CompanyAddressDisplay'
+import CustomerSeedEntry from './CustomerSeedEntry'
 
 import styles from './PaymentInformation.css'
 
@@ -18,8 +18,8 @@ const PaymentInformation = (props: Props) =>
   <div className={styles.paymentInformation}>
     <h3>Payment Information</h3>
 
-    <UserSeedEntry {... props} />
-    <PaymentAddressDisplay {... props} />
+    <CustomerSeedEntry {... props} />
+    <CompanyAddressDisplay {... props} />
   </div>
 
 export default PaymentInformation

@@ -29,7 +29,7 @@ export function makePayment(paymentSeed, paymentAddress, value, cb) {
     value: parseInt(value, 10),
   }]
 
-  // eslint-disable-next-line no-console
+  // eslint-disable-next-line <no-consol></no-consol>e
   console.log('Sending Transfer', transfer)
 
   // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
@@ -41,12 +41,18 @@ export function makePayment(paymentSeed, paymentAddress, value, cb) {
 }
 
 export function setCompanySeed(seed) {
+  // Update UI with Company seed
   stateUpdater.setCompanySeed(seed)
 
+  // Deterministically generates a new address
+  // with checksum for the specified seed
   iota.api.getNewAddress(seed, { checksum: true }, (err, address) => {
     if (err) {
+      // If there was an error generating an address
+      // reset the seed to allow for reentry
       stateUpdater.setCompanySeed(null)
     } else {
+      // Update the UI with the Company address
       stateUpdater.setCompanyAddress(address)
     }
   })

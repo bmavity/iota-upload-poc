@@ -1,0 +1,20 @@
+.availableBalance {
+  display: block;
+  font-size: 24px;
+  margin: 25px auto 0;
+  width: 90px;
+}
+
+.customerSeedEntry {
+  height: 150px;
+}
+
+.iotaLogo {
+  width: 20px;
+  height: 20px;
+}
+
+.setSeed {
+  text-align: center;
+  margin: 20px 0;
+}

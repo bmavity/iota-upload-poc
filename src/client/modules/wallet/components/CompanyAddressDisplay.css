@@ -4,7 +4,13 @@
   height: 25px;
 }
 
-.paymentAddress {
+.companyAddressDisplay {
+  height: 150px;
+}
+
+.companyAddress {
   width: 100%;
   word-wrap: break-word;
 }
+
+

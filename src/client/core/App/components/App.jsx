@@ -47,7 +47,7 @@ export default class App extends Component {
             <section className={styles.send__section}>
               <div className={styles.send}>
                 <div className={styles.send__header}>
-                  <p className={styles.send__headerTitle}>Upload File</p>
+                  <p className={styles.send__headerTitle}>File Uploader</p>
                 </div>
                 <div className={styles.send__body}>
                   <div className="row">
@@ -69,39 +69,3 @@ export default class App extends Component {
     )
   }
 }
-
-
-/*
-
-<div className="col-xs-6">
-  <div className="form-group">
-    <label htmlFor="name">Your Name</label>
-    <input type="text" maxLength="16" className="form-control" id="name" placeholder="Enter Name" />
-  </div>
-</div>
-
-<div className="col-xs-6">
-  <div className="form-group">
-    <label htmlFor="value">Value</label>
-    <input type="number" className="form-control" id="value" placeholder="Value to Send" />
-  </div>
-</div>
-
-<div className="col-xs-12">
-  <div className="form-group">
-    <label htmlFor="address">Recipient Address</label>
-<input type="text" className="form-control" id="address" placeholder="IOTA address of recipient" />
-  </div>
-</div>
-
-<div className="col-xs-12">
-  <div className="form-group">
-    <label htmlFor="message">Text Area</label>
-    <textarea id="message" className="form-control" rows="3" placeholder="Message to send" />
-  </div>
-</div>
-
-<div className={styles.send__button}>
-  <button className="btn btn-success btn-lg" id="submit">Submit</button>
-</div>
-*/

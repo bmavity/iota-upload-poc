@@ -9,8 +9,7 @@ export default function AppHeader({ hasSidebarOpen, setSidebarVisibility }) {
       <p className="header__title">
         <span>
           <img alt="IOTA logo" className="header__logo" src="static/images/logo.png" />
-        </span>
-        Uploader
+        </span> Pay-As-You-Go Uploads
       </p>
       <nav>
         <div className="nav-right hidden-xs">{
