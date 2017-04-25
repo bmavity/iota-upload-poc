@@ -1,4 +1,4 @@
 
 export App from './components/App'
 
-export { appActions, connect, getAppState } from './appState'
+export { appActions, connect, getAppState, stateUpdater } from './appState'

@@ -1,12 +1,12 @@
-import { appActions } from '../appState'
-import { generateAddress, getAccountBalance, makePayment } from '../../../modules/wallet'
+import { appActions, stateUpdater } from '../appState'
+import { getAccountBalance, makePayment } from '../../../modules/wallet'
 
 jest.mock('../../../modules/wallet/wallet')
 
 const argNames = {
-  paymentAddress: 1,
+  companyAddress: 1,
   paymentAmount: 2,
-  paymentSeed: 0,
+  customerSeed: 0,
 }
 
 function getArgValue(mockFunc, arg) {
@@ -16,20 +16,21 @@ function getArgValue(mockFunc, arg) {
 
 describe('appActions, when making a payment', () => {
   beforeAll(() => {
-    generateAddress.mockImplementation((_, cb) => cb(null, 'payment address'))
     getAccountBalance.mockImplementation((_, cb) => cb(null, null))
 
-    appActions.setCompanySeed('company seed')
-    appActions.setPaymentSeed('payment seed')
+    // This needs to be migrated to wallet tests
+    stateUpdater.setCompanySeed('company seed')
+    stateUpdater.setCompanyAddress('company address')
+    appActions.setPaymentSeed('customer seed')
     appActions.makePayment('a file id', 57)
   })
 
   it('should have the proper seed', () => {
-    expect(getArgValue(makePayment, 'paymentSeed')).toBe('payment seed')
+    expect(getArgValue(makePayment, 'customerSeed')).toBe('customer seed')
   })
 
   it('should send to the proper address', () => {
-    expect(getArgValue(makePayment, 'paymentAddress')).toBe('payment address')
+    expect(getArgValue(makePayment, 'companyAddress')).toBe('company address')
   })
 
   it('should have the proper amount', () => {

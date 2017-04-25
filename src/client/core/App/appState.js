@@ -1,5 +1,5 @@
 // @flow
-import { generateAddress, getAccountBalance, makePayment } from '../../modules/wallet'
+import { getAccountBalance, makePayment } from '../../modules/wallet'
 
 let toNotify
 let state = {
@@ -63,20 +63,6 @@ export const appActions = {
     })
   },
 
-  setCompanySeed(seed: string) {
-    updateState(mergeState({
-      companySeed: seed,
-    }))
-
-    generateAddress(seed, (err, paymentAddress) => {
-      if (err) {
-        updateState(mergeState({ companySeed: null }))
-      } else {
-        updateState(mergeState({ paymentAddress }))
-      }
-    })
-  },
-
   setPaymentSeed(seed: string) {
     updateState(mergeState({
       paymentSeed: seed,
@@ -89,5 +75,19 @@ export const appActions = {
         updateState(mergeState({ paymentBalance: balance }))
       }
     })
+  },
+}
+
+
+export const stateUpdater = {
+  setCompanyAddress(address: string) {
+    updateState(mergeState({
+      paymentAddress: address,
+    }))
+  },
+  setCompanySeed(seed: string) {
+    updateState(mergeState({
+      companySeed: seed,
+    }))
   },
 }

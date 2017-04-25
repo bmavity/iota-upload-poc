@@ -1,21 +1,21 @@
-// @flow
 import Iota from 'iota.lib.js'
 
+import { stateUpdater } from '../../core/App'
 import { iotaConfig } from '../../../shared/config'
 
-const wallet = new Iota(iotaConfig)
+const iota = new Iota(iotaConfig)
 
 
-export function generateAddress(seed: string, cb: (err: ?Error, address: ?string) => void) {
-  wallet.api.getNewAddress(seed, { checksum: true }, (err, address) => {
+export function generateAddress(seed, cb) {
+  iota.api.getNewAddress(seed, { checksum: true }, (err, address) => {
     if (err) return cb(err)
 
     return cb(null, address)
   })
 }
 
-export function getAccountBalance(seed: string, cb: (err: ?Error, balance: ?number) => void) {
-  wallet.api.getAccountData(seed, (err, accountData) => {
+export function getAccountBalance(seed, cb) {
+  iota.api.getAccountData(seed, (err, accountData) => {
     if (err) return cb(err)
 
     return cb(null, accountData.balance)
@@ -23,7 +23,7 @@ export function getAccountBalance(seed: string, cb: (err: ?Error, balance: ?numb
 }
 
 // eslint-disable-next-line max-len
-export function makePayment(paymentSeed: string, paymentAddress: string, value: number, cb: (err: ?Error, value: ?number) => void) {
+export function makePayment(paymentSeed, paymentAddress, value, cb) {
   const transfer = [{
     address: paymentAddress,
     value: parseInt(value, 10),
@@ -33,9 +33,21 @@ export function makePayment(paymentSeed: string, paymentAddress: string, value: 
   console.log('Sending Transfer', transfer)
 
   // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
-  wallet.api.sendTransfer(paymentSeed, 4, 18, transfer, (err) => {
+  iota.api.sendTransfer(paymentSeed, 4, 18, transfer, (err) => {
     if (err) return cb(err)
 
     return cb(null, value)
+  })
+}
+
+export function setCompanySeed(seed) {
+  stateUpdater.setCompanySeed(seed)
+
+  iota.api.getNewAddress(seed, { checksum: true }, (err, address) => {
+    if (err) {
+      stateUpdater.setCompanySeed(null)
+    } else {
+      stateUpdater.setCompanyAddress(address)
+    }
   })
 }

@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import AddressGenerationMessage from './AddressGenerationMessage'
 import CompanySeedEntry from './CompanySeedEntry'
 import PaymentAddressAndBalance from './PaymentAddressAndBalance'
+import { setCompanySeed } from '../wallet'
 
 import styles from './WalletSidebar.css'
 
@@ -23,7 +24,6 @@ export default class WalletSidebar extends Component {
     companyBalance?: number,
     companySeed?: string,
     paymentAddress?: string,
-    setCompanySeed: Function,
   }
 
   updateSeedValue(evt: Event & { currentTarget: HTMLInputElement }) {
@@ -32,7 +32,7 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
-    const { companyBalance, companySeed, paymentAddress, setCompanySeed } = this.props
+    const { companyBalance, companySeed, paymentAddress } = this.props
 
     const isGeneratingAddress = paymentAddress === null && companySeed !== null
 
