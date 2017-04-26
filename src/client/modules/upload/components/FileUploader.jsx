@@ -1,14 +1,14 @@
 // @flow
 import React, { Component } from 'react'
 
-import { initalize as initUploader } from '../uploader'
+import { initalizeUploader } from '../uploader'
 
 import './FileUploader.css'
 
 
 export default class FileUploader extends Component {
   componentDidMount() {
-    initUploader({
+    initalizeUploader({
       inline: true,
       resumableUploads: true,
       target: '.uploader',

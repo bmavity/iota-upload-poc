@@ -68,12 +68,35 @@ export function setCustomerSeed(seed) {
 }
 ```
 
+### Configuring Uppy
+To upload files, we are using the [Uppy library](https://uppy.io/). Currently, it is a work in progress, so they reserve the right to change the API at any time, and they also caution that it should not be used in a production environment. But, it will do just fine for our purposes. Uppy is designed to be completely modular, with all logic residing in plugins that are added to a coordinator object with [an API](https://uppy.io/api/) that consists of two setup methods and status events. The documentation is not great at this time, so if you are interested in learning more, prepare to do some digging through the code.
+
+The desired behavior of the application is to allow the Customer to add files to the upload, but not to start the uploads automatically so that the Customer can decide when to start being charged. It also will keep track of each individual file that is being uploaded so that the progress and payments for each individual file can be identified. When the application starts, the following code is run to configure Uppy.
+
+```javascript
+// Initialize Uppy with autoProceed: false so that uploads
+// do not start automaticlly.
+const uppy = Uppy({ autoProceed: false, debug: true })
+
+// Create a PaidUpload instance for each file that is uploaded
+uppy.on('core:upload-started', (fileId, upload) => {
+  // Encapsulate the Uppy fileId and upload into an object
+  // that will keep track of progress and payments
+  uploaders[fileId] = new PaidUpload(fileId, upload)
+})
+```
+
+Due to the 
+
+
 ### Uploading a File
 
 
+
+
 ## Exercises
-1.	IOTA addresses are secure for multiple payments as long as nobody spends from the address. To ensure that a company can spend in the middle of an upload:
+1.	IOTA addresses are secure for multiple payments as long as nothing is spent from that address. To ensure that a company can spend in the middle of an upload:
     1.	generate a new address for each payment
     1.	add the file id as a message to the transaction so that transactions can be rolled up into a full payment.
-1.	Next
+1.	Currently, if the page is refreshed when an upload is paused, and the Customer resumes the upload, the application will charge the Customer for the full size of the file, instead of calculating previous payments. Use the file id added to the transactions in the previous exercise to calculate existing payments to ensure the Customer is charged fairly.
 

@@ -3,8 +3,7 @@ import { appActions } from '../../core/App/appState'
 const bytesForOneIota = 1000000
 
 
-// eslint-disable-next-line import/prefer-default-export
-export class PayableUpload {
+export default class PaidUpload {
   constructor(fileId, upload) {
     this.fileId = fileId
     this.upload = upload
@@ -12,7 +11,6 @@ export class PayableUpload {
     this.bytesPaid = 0
     this.bytesPendingPayment = 0
     this.bytesUploaded = 0
-    // this.totalBytes = upload.file.size
 
     const originalOnProgress = upload.options.onProgress
     // eslint-disable-next-line no-param-reassign

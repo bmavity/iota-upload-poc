@@ -1,4 +1,4 @@
-import { PayableUpload } from '../payments'
+import PaidUpload from '../PaidUpload'
 import { appActions } from '../../../core/App/appState'
 
 jest.mock('../../../core/App/appState')
@@ -13,43 +13,43 @@ function createUpload(onProgress) {
   }
 }
 
-function createPayable(fileId, upload) {
-  return new PayableUpload(fileId, upload || createUpload())
+function createPaidUpload(fileId, upload) {
+  return new PaidUpload(fileId, upload || createUpload())
 }
 
-describe('PayableUpload, when imported', () => {
+describe('PaidUpload, when imported', () => {
   it('should be defined', () => {
-    expect(PayableUpload).toBeDefined()
+    expect(PaidUpload).toBeDefined()
   })
 })
 
-describe('PayableUpload, when created', () => {
-  let payable
+describe('PaidUpload, when created', () => {
+  let paidUpload
 
   beforeAll(() => {
-    payable = createPayable('a file id')
+    paidUpload = createPaidUpload('a file id')
   })
 
   it('should have the proper fileId', () => {
-    expect(payable.fileId).toBe('a file id')
+    expect(paidUpload.fileId).toBe('a file id')
   })
 
   it('should not have any paid bytes', () => {
-    expect(payable.bytesPaid).toBe(0)
+    expect(paidUpload.bytesPaid).toBe(0)
   })
 
   it('should not have any uploaded bytes', () => {
-    expect(payable.bytesUploaded).toBe(0)
+    expect(paidUpload.bytesUploaded).toBe(0)
   })
 })
 
-describe('PayableUpload, on upload progress', () => {
+describe('PaidUpload, on upload progress', () => {
   let originalOnProgress
 
   beforeAll(() => {
     originalOnProgress = jest.fn()
     const upload = createUpload(originalOnProgress)
-    createPayable('file id 1', upload)
+    createPaidUpload('file id 1', upload)
 
     upload.options.onProgress(12, 36)
   })
@@ -59,7 +59,7 @@ describe('PayableUpload, on upload progress', () => {
   })
 })
 
-describe('PayableUpload, on upload progress, with unpaid bytes', () => {
+describe('PaidUpload, on upload progress, with unpaid bytes', () => {
   let upload
 
   beforeAll(() => {
@@ -68,7 +68,7 @@ describe('PayableUpload, on upload progress, with unpaid bytes', () => {
     const totalBytes = 36000000
 
     upload = createUpload()
-    createPayable('a file id 2', upload)
+    createPaidUpload('a file id 2', upload)
 
     upload.options.onProgress(unpaidBytes, totalBytes)
   })

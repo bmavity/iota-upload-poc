@@ -49,6 +49,7 @@ export const appActions = {
       status: 'processing',
     })
 
+    // eslint-disable-next-line no-console
     console.log(file, payments, updatedFile)
     updateState(mergeState({ files: Object.assign({}, state.files, { [fileId]: updatedFile }) }))
 

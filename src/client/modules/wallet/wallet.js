@@ -22,7 +22,7 @@ export function makePayment(paymentSeed, customerAddress, value, cb) {
     value: parseInt(value, 10),
   }]
 
-  // eslint-disable-next-line <no-consol></no-consol>e
+  // eslint-disable-next-line no-console
   console.log('Sending Transfer', transfer)
 
   // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
