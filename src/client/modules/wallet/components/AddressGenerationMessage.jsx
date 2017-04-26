@@ -1,8 +1,8 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 import styles from './WalletSidebar.css'
 
-const AddressGenerationMessage = ({ isGeneratingAddress }) => {
+const AddressGenerationMessage = ({ isGeneratingAddress }: { isGeneratingAddress: boolean }) => {
   const itemClass = isGeneratingAddress ? 'active' : ''
   const collapseClass = isGeneratingAddress ? 'in' : ''
 
@@ -27,9 +27,6 @@ const AddressGenerationMessage = ({ isGeneratingAddress }) => {
       </div>
     </li>
   )
-}
-AddressGenerationMessage.propTypes = {
-  isGeneratingAddress: PropTypes.bool.isRequired,
 }
 
 export default AddressGenerationMessage

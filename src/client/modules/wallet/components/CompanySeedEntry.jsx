@@ -1,8 +1,16 @@
-import React, { PropTypes } from 'react'
+// @flow
+import React from 'react'
 
 import styles from './WalletSidebar.css'
 
-const CompanySeedEntry = ({ hasSeedSet, companySeed, setCompanySeed, updateSeedValue }) => {
+type Props = {
+  companySeed: string,
+  hasSeedSet: boolean,
+  setCompanySeed: (seed: string) => void,
+  updateSeedValue: (evt: Event & { currentTarget: HTMLInputElement }) => void,
+}
+
+const CompanySeedEntry = ({ hasSeedSet, companySeed, setCompanySeed, updateSeedValue }: Props) => {
   const seedActiveClass = hasSeedSet ? '' : 'active'
   const seedCollapseClass = hasSeedSet ? '' : 'in'
   const seedValue = hasSeedSet ? '' : companySeed
@@ -27,13 +35,6 @@ const CompanySeedEntry = ({ hasSeedSet, companySeed, setCompanySeed, updateSeedV
       </div>
     </li>
   )
-}
-CompanySeedEntry.propTypes = {
-  // eslint-disable-next-line react/require-default-props
-  companySeed: PropTypes.string,
-  hasSeedSet: PropTypes.bool.isRequired,
-  setCompanySeed: PropTypes.func.isRequired,
-  updateSeedValue: PropTypes.func.isRequired,
 }
 
 export default CompanySeedEntry

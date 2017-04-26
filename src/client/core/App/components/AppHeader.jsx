@@ -1,7 +1,11 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
+type Props = {
+  hasSidebarOpen: boolean,
+  setSidebarVisibility: (hasSidebarOpen: boolean) => void,
+}
 
-export default function AppHeader({ hasSidebarOpen, setSidebarVisibility }) {
+export default function AppHeader({ hasSidebarOpen, setSidebarVisibility }: Props) {
   const sidebarActiveClass = hasSidebarOpen ? 'active' : ''
 
   return (
@@ -23,9 +27,4 @@ export default function AppHeader({ hasSidebarOpen, setSidebarVisibility }) {
       </nav>
     </header>
   )
-}
-
-AppHeader.propTypes = {
-  hasSidebarOpen: PropTypes.bool.isRequired,
-  setSidebarVisibility: PropTypes.func.isRequired,
 }
