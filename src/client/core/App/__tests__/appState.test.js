@@ -21,7 +21,7 @@ describe('appActions, when making a payment', () => {
     // This needs to be migrated to wallet tests
     stateUpdater.setCompanySeed('company seed')
     stateUpdater.setCompanyAddress('company address')
-    appActions.setPaymentSeed('customer seed')
+    stateUpdater.setCustomerSeed('customer seed')
     appActions.makePayment('a file id', 57)
   })
 

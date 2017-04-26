@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 
 import AddressGenerationMessage from './AddressGenerationMessage'
 import CompanySeedEntry from './CompanySeedEntry'
-import PaymentAddressAndBalance from './PaymentAddressAndBalance'
+import CompanyAddressAndBalance from './CompanyAddressAndBalance'
 import { setCompanySeed } from '../wallet'
 
 import styles from './WalletSidebar.css'
@@ -13,7 +13,7 @@ export default class WalletSidebar extends Component {
   static defaultProps = {
     companyBalance: null,
     companySeed: null,
-    paymentAddress: null,
+    customerAddress: null,
   }
 
   state = {
@@ -23,7 +23,7 @@ export default class WalletSidebar extends Component {
   props: {
     companyBalance?: number,
     companySeed?: string,
-    paymentAddress?: string,
+    customerAddress?: string,
   }
 
   updateSeedValue(evt: Event & { currentTarget: HTMLInputElement }) {
@@ -32,9 +32,9 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
-    const { companyBalance, companySeed, paymentAddress } = this.props
+    const { companyBalance, companySeed, customerAddress } = this.props
 
-    const isGeneratingAddress = paymentAddress === null && companySeed !== null
+    const isGeneratingAddress = customerAddress === null && companySeed !== null
 
     const actions = {
       setCompanySeed: () => setCompanySeed(this.state.companySeed),
@@ -52,10 +52,9 @@ export default class WalletSidebar extends Component {
           />
           <AddressGenerationMessage
             isGeneratingAddress={isGeneratingAddress}
-            paymentAddress={paymentAddress}
           />
-          <PaymentAddressAndBalance
-            hasPaymentAddress={paymentAddress !== null}
+          <CompanyAddressAndBalance
+            hasCustomerAddress={customerAddress !== null}
             companyBalance={companyBalance}
           />
         </ul>

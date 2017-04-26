@@ -14,18 +14,11 @@ export function generateAddress(seed, cb) {
   })
 }
 
-export function getAccountBalance(seed, cb) {
-  iota.api.getAccountData(seed, (err, accountData) => {
-    if (err) return cb(err)
-
-    return cb(null, accountData.balance)
-  })
-}
 
 // eslint-disable-next-line max-len
-export function makePayment(paymentSeed, paymentAddress, value, cb) {
+export function makePayment(paymentSeed, customerAddress, value, cb) {
   const transfer = [{
-    address: paymentAddress,
+    address: customerAddress,
     value: parseInt(value, 10),
   }]
 
@@ -54,6 +47,23 @@ export function setCompanySeed(seed) {
     } else {
       // Update the UI with the Company address
       stateUpdater.setCompanyAddress(address)
+    }
+  })
+}
+
+export function setCustomerSeed(seed) {
+  // Update UI with Customer seed
+  stateUpdater.setCustomerSeed(seed)
+
+  // Gets account information for the specified seed
+  iota.api.getAccountData(seed, (err, accountData) => {
+    if (err) {
+      // If there was an error getting the account data
+      // reset the seed to allow for reentry
+      stateUpdater.setCustomerSeed(null)
+    } else {
+      // Update the UI with the Customer balance
+      stateUpdater.setCustomerBalance(accountData.balance)
     }
   })
 }

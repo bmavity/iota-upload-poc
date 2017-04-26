@@ -3,10 +3,10 @@ import React from 'react'
 
 import styles from './WalletSidebar.css'
 
-const PaymentAddressAndBalance = ({ companyBalance,
-  hasPaymentAddress }: { companyBalance: ?number, hasPaymentAddress: boolean }) => {
-  const itemClass = hasPaymentAddress ? 'active' : ''
-  const collapseClass = hasPaymentAddress ? 'in' : ''
+const CompanyAddressAndBalance = ({ companyBalance,
+  hasCustomerAddress }: { companyBalance: ?number, hasCustomerAddress: boolean }) => {
+  const itemClass = hasCustomerAddress ? 'active' : ''
+  const collapseClass = hasCustomerAddress ? 'in' : ''
 
   return (
     <li className={`${styles.sidebarItem} ${itemClass} ${styles.companyBalance}`}>
@@ -21,4 +21,4 @@ const PaymentAddressAndBalance = ({ companyBalance,
   )
 }
 
-export default PaymentAddressAndBalance
+export default CompanyAddressAndBalance

@@ -1,27 +1,28 @@
 // @flow
 import React, { Component } from 'react'
 
+import { setCustomerSeed } from '../wallet'
+
 import styles from './CustomerSeedEntry.css'
 
 
 class SeedEntry extends Component {
   state = {
-    paymentSeed: '',
+    customerSeed: '',
   }
 
   props: {
-    paymentSeed: ?string,
-    setPaymentSeed: (seed: string) => void,
+    customerSeed: ?string,
   }
 
   updateSeedValue(evt: Event & { currentTarget: HTMLInputElement }) {
-    const paymentSeed = evt.currentTarget.value
-    this.setState(() => ({ paymentSeed }))
+    const customerSeed = evt.currentTarget.value
+    this.setState(() => ({ customerSeed }))
   }
 
   render() {
-    const { paymentSeed, setPaymentSeed } = this.props
-    const seedValue = paymentSeed === null ? this.state.paymentSeed : ''
+    const { customerSeed } = this.props
+    const seedValue = customerSeed === null ? this.state.customerSeed : ''
 
     return (
       <div>
@@ -33,7 +34,7 @@ class SeedEntry extends Component {
           onChange={evt => this.updateSeedValue(evt)}
         />
         <div className={styles.setSeed}>
-          <button className="btn btn-success" onClick={() => setPaymentSeed(this.state.paymentSeed)}>Set Seed</button>
+          <button className="btn btn-success" onClick={() => setCustomerSeed(this.state.customerSeed)}>Set Seed</button>
         </div>
       </div>
     )
@@ -56,15 +57,14 @@ const WalletBalance = ({ availableBalance }: { availableBalance: ?number }) =>
   </div>
 
 
-const CustomerSeedEntry = ({ paymentBalance, paymentSeed, setPaymentSeed }: {
-    paymentBalance: ?number,
-    paymentSeed: ?string,
-    setPaymentSeed: (seed: string) => void
+const CustomerSeedEntry = ({ customerBalance, customerSeed }: {
+    customerBalance: ?number,
+    customerSeed: ?string,
   }) => {
   // eslint-disable-next-line no-nested-ternary
-  const ActiveComponent = paymentSeed === null
+  const ActiveComponent = customerSeed === null
     ? SeedEntry
-    : paymentBalance === null
+    : customerBalance === null
       ? WalletLoading
       : WalletBalance
 
@@ -73,9 +73,8 @@ const CustomerSeedEntry = ({ paymentBalance, paymentSeed, setPaymentSeed }: {
       <div className="form-group">
         <label htmlFor="address">Customer Wallet</label>
         <ActiveComponent
-          availableBalance={paymentBalance}
-          paymentSeed={paymentSeed}
-          setPaymentSeed={setPaymentSeed}
+          availableBalance={customerBalance}
+          customerSeed={customerSeed}
         />
       </div>
     </div>

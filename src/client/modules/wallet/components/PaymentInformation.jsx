@@ -8,10 +8,9 @@ import styles from './PaymentInformation.css'
 
 type Props = {
   companySeed: ?string,
-  paymentAddress: ?string,
-  paymentBalance: ?number,
-  paymentSeed: ?string,
-  setPaymentSeed: (seed: string) => void,
+  customerAddress: ?string,
+  customerBalance: ?number,
+  customerSeed: ?string,
 }
 
 const PaymentInformation = (props: Props) =>

@@ -1,14 +1,14 @@
 // @flow
-import { getAccountBalance, makePayment } from '../../modules/wallet'
+import { makePayment } from '../../modules/wallet'
 
 let toNotify
 let state = {
   companyBalance: null,
   companySeed: null,
+  customerAddress: null,
+  customerBalance: null,
+  customerSeed: null,
   files: {},
-  paymentAddress: null,
-  paymentBalance: null,
-  paymentSeed: null,
 }
 
 function updateState(updatedState) {
@@ -52,7 +52,7 @@ export const appActions = {
     console.log(file, payments, updatedFile)
     updateState(mergeState({ files: Object.assign({}, state.files, { [fileId]: updatedFile }) }))
 
-    makePayment(state.paymentSeed, state.paymentAddress, paymentAmount, (err) => {
+    makePayment(state.customerSeed, state.customerAddress, paymentAmount, (err) => {
       updateState(mergeState({
         files: Object.assign({}, state.files, {
           [fileId]: updateFile(fileId, paymentId, {
@@ -62,32 +62,28 @@ export const appActions = {
       }))
     })
   },
-
-  setPaymentSeed(seed: string) {
-    updateState(mergeState({
-      paymentSeed: seed,
-    }))
-
-    getAccountBalance(seed, (err, balance) => {
-      if (err) {
-        updateState(mergeState({ paymentSeed: null }))
-      } else {
-        updateState(mergeState({ paymentBalance: balance }))
-      }
-    })
-  },
 }
 
 
 export const stateUpdater = {
   setCompanyAddress(address: string) {
     updateState(mergeState({
-      paymentAddress: address,
+      customerAddress: address,
     }))
   },
   setCompanySeed(seed: string) {
     updateState(mergeState({
       companySeed: seed,
+    }))
+  },
+  setCustomerBalance(balance: ?number) {
+    updateState(mergeState({
+      customerBalance: balance,
+    }))
+  },
+  setCustomerSeed(seed: string) {
+    updateState(mergeState({
+      customerSeed: seed,
     }))
   },
 }

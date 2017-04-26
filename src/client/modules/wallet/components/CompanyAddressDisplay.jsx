@@ -26,21 +26,21 @@ const CompanyAddress = ({ companyAddress }: { companyAddress: ?string }) =>
   </div>
 
 
-const CompanyAddressDisplay = ({ paymentAddress, companySeed }: {
-    paymentAddress: ?string,
+const CompanyAddressDisplay = ({ customerAddress, companySeed }: {
+    customerAddress: ?string,
     companySeed: ?string,
   }) => {
   // eslint-disable-next-line no-nested-ternary
   const ActiveComponent = companySeed === null
     ? NoCompanyAddress
-    : paymentAddress === null
+    : customerAddress === null
       ? GeneratingCompanyAddress
       : CompanyAddress
 
   return (
     <div className={`${styles.companyAddressDisplay} form-group`}>
       <label htmlFor="address">Company Address</label>
-      <ActiveComponent companyAddress={paymentAddress} />
+      <ActiveComponent companyAddress={customerAddress} />
     </div>
   )
 }

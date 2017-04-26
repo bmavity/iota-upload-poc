@@ -19,18 +19,18 @@ export default class FileInformation extends Component {
   }
 
   props: {
-    paymentAddress: ?string,
-    paymentBalance: ?number,
-    paymentSeed: ?string,
+    customerAddress: ?string,
+    customerBalance: ?number,
+    customerSeed: ?string,
   }
 
   render() {
-    const { paymentAddress, paymentBalance, paymentSeed } = this.props
-    const hasPaymentAddress = paymentAddress !== null
-    const canPay = paymentSeed !== null
-      && paymentBalance !== null
-      && parseInt(paymentBalance, 10) > 0
-    const canUpload = hasPaymentAddress && canPay
+    const { customerAddress, customerBalance, customerSeed } = this.props
+    const hasCustomerAddress = customerAddress !== null
+    const canPay = customerSeed !== null
+      && customerBalance !== null
+      && parseInt(customerBalance, 10) > 0
+    const canUpload = hasCustomerAddress && canPay
     const DisplayComponent = canUpload ? FileUploader : CannotUpload
 
     return (
