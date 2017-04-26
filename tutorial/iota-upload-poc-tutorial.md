@@ -105,10 +105,29 @@ export function initalizeUploader(config) {
 }
 ```
 
-
 ### Uploading a File
+Now that we have the UI initialized, we can add files to the Uppy Dashboard. Since we have specified that the uploads should not start automatically, we will need to click the upload button. Once clicked, the upload will start and the _*core:upload-started*_ event will fire, causing a new PaidUpload object to be created. The PaidUpload constructor adds an `onProgress` handler to the `upload` object to determine when a payment needs to be made. Unfortunately, Uppy does not expose this functionality on a per-file basis, so we have to make sure to call Uppy's original `onProgress` handler, before continuing with the code that we need to execute.
 
+```javascript
+  constructor(fileId, upload) {
+    this.fileId = fileId
+    this.upload = upload
 
+    this.bytesPaid = 0
+    this.bytesPendingPayment = 0
+    this.bytesUploaded = 0
+
+    const originalOnProgress = upload.options.onProgress
+    
+    upload.options.onProgress = (bytesUploaded, bytesTotal) => {
+      originalOnProgress(bytesUploaded, bytesTotal)
+
+      this.addBytesToUpload(bytesUploaded)
+    }
+  }
+```
+
+### Calculating Payment Due
 
 
 ## Exercises
