@@ -106,28 +106,57 @@ export function initalizeUploader(config) {
 ```
 
 ### Uploading a File
-Now that we have the UI initialized, we can add files to the Uppy Dashboard. Since we have specified that the uploads should not start automatically, we will need to click the upload button. Once clicked, the upload will start and the _*core:upload-started*_ event will fire, causing a new PaidUpload object to be created. The PaidUpload constructor adds an `onProgress` handler to the `upload` object to determine when a payment needs to be made. Unfortunately, Uppy does not expose this functionality on a per-file basis, so we have to make sure to call Uppy's original `onProgress` handler, before continuing with the code that we need to execute.
+Now that we have the UI initialized, we can add files to the Uppy Dashboard. Since we have specified that the uploads should not start automatically, we will need to click the upload button to begin. Once clicked, the upload will start and the _*core:upload-started*_ event will fire, causing a new PaidUpload object to be created. The PaidUpload constructor adds an `onProgress` handler to the `upload` object to determine when a payment needs to be made. Unfortunately, Uppy does not expose this functionality on a per-file basis, so we have to make sure to call Uppy's original `onProgress` handler before continuing with the code that we need to execute.
 
 ```javascript
-  constructor(fileId, upload) {
-    this.fileId = fileId
-    this.upload = upload
+constructor(fileId, upload) {
+  ...
 
-    this.bytesPaid = 0
-    this.bytesPendingPayment = 0
-    this.bytesUploaded = 0
+  // Initialize all byte fields to 0
+  // assumes upload has not been resumed
+  this.bytesPaid = 0
+  this.bytesPendingPayment = 0
+  this.bytesUploaded = 0
 
-    const originalOnProgress = upload.options.onProgress
-    
-    upload.options.onProgress = (bytesUploaded, bytesTotal) => {
-      originalOnProgress(bytesUploaded, bytesTotal)
+  // Save original onProgress handler
+  const originalOnProgress = upload.options.onProgress
+  // eslint-disable-next-line no-param-reassign
+  upload.options.onProgress = (bytesUploaded, bytesTotal) => {
+    // Invoke original onProgress handler to avoid
+    // possible breakage of Uppy functionality
+    originalOnProgress(bytesUploaded, bytesTotal)
 
-      this.addBytesToUpload(bytesUploaded)
-    }
+    // Process the uploaded bytes
+    this.addBytesToUpload(bytesUploaded)
   }
+}
 ```
 
 ### Calculating Payment Due
+While the file is uploading, the `onProgress` handler we added in the `PaidUpload` constructor will be called periodically with the cumulative bytes that have been uploaded so far, as well as the total size of the file in bytes. We will need to determine whether the upload should continue or whether it should be paused and a payment should be made. In our app, we are going to charge users 1 IOTA for every MB uploaded. We will keep track of the number of bytes that have been paid with confirmed transactions, as well as the number of bytes that have pending payments. (Theoretically, uploads should only continue once a payment is confirmed, but due to the way the Uppy Dashboard works, uploads can be resumed before a payment is processed.) Once the number of unpaid bytes is calculated, we'll make a payment.
+
+```javascript
+addBytesToUpload(bytesUploaded) {
+  // To avoid double charging Customers for uploaded bytes
+  // include the bytes that already have a transaction
+  // created or are "pending" confirm
+  const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
+  const unpaidBytes = bytesUploaded - totalPendingBytes
+
+  // If there are any bytes that have not been paid,
+  // pause the upload and make a new payment
+  if (unpaidBytes > 0) {
+    this.pauseUpload()
+    this.makePayment(unpaidBytes)
+  }
+}
+
+makePayment(unpaidBytes) {
+  // Calculate the amount of IOTA due, rounding up.
+  const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
+  appActions.makePayment(this.fileId, paymentAmount)
+}
+```
 
 
 ## Exercises
