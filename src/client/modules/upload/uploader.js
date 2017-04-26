@@ -23,12 +23,18 @@ uppy.on('core:upload-started', (fileId, upload) => {
 
 export default uppy
 
+// Called once to initialize the Uppy UI
 export function initalizeUploader(config) {
+  // UI plugin for friendly display
   uppy.use(Dashboard, config)
+    // Allows webcam video to be uploaded
     .use(Webcam, { target: Dashboard })
+    // Displays information messages
     .use(Informer, { target: Dashboard })
+    // File uploading protocol that allows uploads to be paused/resumed
     .use(Tus10, { endpoint: `//localhost:${WEB_PORT}/files` })
 
+  // Display the configured Uppy UI
   uppy.run()
 }
 

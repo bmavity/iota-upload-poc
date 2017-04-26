@@ -86,7 +86,24 @@ uppy.on('core:upload-started', (fileId, upload) => {
 })
 ```
 
-Due to the 
+The Uppy UI (DashboardUI) we are using adds itself to the page when Uppy is initialized. Due to the use of React, the intialization code needs to be separated so that it can run when the DashboardUI is first displayed. The initilization code should ensure that the application has a nice UI, pausable/resumable uploads, and that it can get files from multiple places.
+
+```javascript
+// Called once to initialize the Uppy UI
+export function initalizeUploader(config) {
+  // UI plugin for friendly display
+  uppy.use(Dashboard, config)
+    // Allows webcam video to be uploaded
+    .use(Webcam, { target: Dashboard })
+    // Displays information messages
+    .use(Informer, { target: Dashboard })
+    // File uploading protocol that allows uploads to be paused/resumed
+    .use(Tus10, { endpoint: `//localhost:${WEB_PORT}/files` })
+
+  // Display the configured Uppy UI
+  uppy.run()
+}
+```
 
 
 ### Uploading a File
@@ -99,4 +116,5 @@ Due to the
     1.	generate a new address for each payment
     1.	add the file id as a message to the transaction so that transactions can be rolled up into a full payment.
 1.	Currently, if the page is refreshed when an upload is paused, and the Customer resumes the upload, the application will charge the Customer for the full size of the file, instead of calculating previous payments. Use the file id added to the transactions in the previous exercise to calculate existing payments to ensure the Customer is charged fairly.
+1. Uppy has additional plugins for Dropbox and Google Drive. Enable the file uploader to get files from both.
 
