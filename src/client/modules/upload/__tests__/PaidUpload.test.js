@@ -4,6 +4,10 @@ import { makePayment } from '../../wallet'
 jest.mock('../../wallet/wallet')
 
 
+function argValue(mock, index) {
+  return mock.mock.calls[0][index]
+}
+
 function createUpload(onProgress) {
   return {
     abort: jest.fn(),
@@ -60,6 +64,7 @@ describe('PaidUpload, on upload progress', () => {
 })
 
 describe('PaidUpload, on upload progress, with unpaid bytes', () => {
+  let paidUpload
   let upload
 
   beforeAll(() => {
@@ -68,7 +73,7 @@ describe('PaidUpload, on upload progress, with unpaid bytes', () => {
     const totalBytes = 36000000
 
     upload = createUpload()
-    createPaidUpload('a file id 2', upload)
+    paidUpload = createPaidUpload('a file id 2', upload)
 
     upload.options.onProgress(unpaidBytes, totalBytes)
   })
@@ -77,7 +82,23 @@ describe('PaidUpload, on upload progress, with unpaid bytes', () => {
     expect(upload.abort).toBeCalledWith()
   })
 
-  it('should make payment for unpaid bytes', () => {
-    expect(makePayment).toBeCalledWith('a file id 2', 1, 12)
+  it('should have no paid bytes', () => {
+    expect(paidUpload.bytesPaid).toBe(0)
+  })
+
+  it('should have the proper pending bytes', () => {
+    expect(paidUpload.bytesPendingPayment).toBe(12000000)
+  })
+
+  it('should make payment with proper file id', () => {
+    expect(argValue(makePayment, 0)).toBe('a file id 2')
+  })
+
+  it('should make payment with proper payment id', () => {
+    expect(argValue(makePayment, 1)).toBe(1)
+  })
+
+  it('should make payment with proper payment amount', () => {
+    expect(argValue(makePayment, 2)).toBe(12)
   })
 })

@@ -1,13 +1,14 @@
 import { makePayment } from '../wallet'
 
-const bytesForOneIota = 1000000
+export const bytesForOneIota = 1000000
 
 
 export default class PaidUpload {
   constructor(fileId, upload) {
+    this.currentPaymentId = 0
     this.fileId = fileId
     this.upload = upload
-    this.currentPaymentId = 0
+    this.payments = {}
 
     // Initialize all byte fields to 0
     // assumes upload has not been resumed
@@ -51,9 +52,25 @@ export default class PaidUpload {
   makePayment(unpaidBytes) {
     // Calculate the amount of IOTA due, rounding up.
     const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
-    // Call wallet API to complete the payment, generating a
-    // new payment id in the process
-    makePayment(this.fileId, this.getNextPaymentId(), paymentAmount)
+    // Generate payment id
+    const paymentId = this.getNextPaymentId()
+
+    // Add the payment as processing
+    this.payments[paymentId] = {
+      bytesPaid: paymentAmount * bytesForOneIota,
+      paymentId,
+      paymentAmount,
+      status: 'processing',
+    }
+
+    // Update the file data to reflect the payment
+    this.updateFileData()
+
+    // Call wallet API to complete the payment
+    makePayment(this.fileId, paymentId, paymentAmount, (status) => {
+      this.payments[paymentId].status = status
+      this.updateFileData()
+    })
   }
 
   pauseUpload() {
@@ -64,16 +81,19 @@ export default class PaidUpload {
     this.upload.start()
   }
 
-  updateFileData(fileData) {
-    const paymentTotals = fileData.payments.reduce((totals, payment) => {
-      // eslint-disable-next-line no-param-reassign
-      totals[payment.status] += payment.amount
-      return totals
-    }, {
-      confirmed: 0,
-      pending: 0,
-      processing: 0,
-    })
+  updateFileData() {
+    const paymentTotals = Object.keys(this.payments)
+      .map(id => this.payments[id])
+      .reduce((totals, payment) => {
+        // eslint-disable-next-line no-param-reassign
+        totals[payment.status] += payment.bytesPaid
+        return totals
+      }, {
+        confirmed: 0,
+        pending: 0,
+        processing: 0,
+      })
+
     this.bytesPaid = paymentTotals.confirmed
     this.bytesPendingPayment = paymentTotals.pending + paymentTotals.processing
   }
