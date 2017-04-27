@@ -1,27 +1,53 @@
+# Pay-As-You-Go Uploads - A IOTA Proof-of-Concept
 ![PoC Overview](./images/poc-overview.png)
 
-This is a tutorial on how to develop a proof-of-concept upload application using IOTA as a payment strategy. While IOTA was designed to enable the Internet-of-Things, its lack of fees also makes it great for micropayments, allowing it to be used for on-demand or pay-as-you-go services. In this tutorial, we will explore what a pay-as-you-go uploading service could look like.
+In this tutorial, we will explore what a pay-as-you-go uploading service using IOTA for payments could look like. While IOTA was designed to enable the Internet-of-Things, its lack of fees also makes it great for micropayments, allowing it to be used for on-demand/pay-as-you-go services.
 
-We assume that you are already familiar with the basics of using the [IOTA JavaScript API](https://github.com/iotaledger/iota.lib.js) to generate addresses and make payments. If not, please review the [introductory level tutorial](https://learn.iota.org/tutorial/payments-and-messaging-leaderboard), and come back afterward to continue.
+The source code for this tutorial and the instructions on how to run it can be found at [https://github.com/bmavity/iota-upload-poc](). 
 
-### Project Structure
+## Before You Begin
+The tutorial makes a few assumptions
+
+* You are already familiar with the basics of using the [IOTA JavaScript API](https://github.com/iotaledger/iota.lib.js) to generate addresses and make payments. If not, please review the [introductory level tutorial](https://learn.iota.org/tutorial/payments-and-messaging-leaderboard), and come back afterward to continue.
+* You are either familiar with, or can follow JavaScript that uses some common ES6 syntax (arrow functions, classes, const/let). See [this overview](https://babeljs.io/learn-es2015/) for more information.
+* You are either running your own IOTA node (see [the setup instructions](https://iota.readme.io/docs/general)) or can connect to the development sandbox (as of writing, the sandbox is not available, but the default configuration will be updated when it is.)
+* You have [http://nodejs.org](node.js) installed
+
+### Additional Setup
+* One wallet seed to send payments, which must have a balance
+* A second wallet seed to receive payments
+* Change the IOTA connection settings in the _*iota.wallet.config.js*_ file to match your local environment.
+
+## Project Structure
 The project is divided into client and server components, but we will focus only on the client, as it has all of the logic. In places, the client uses ES6 syntax, and the UI is developed using React. It is not necessary to be familiar with either, as the application logic is encapsulated from the UI. Those curious about the server code can review it directly, as it is short and commented.
 
-### Setup
-Ensure you have two seeds, including one to a wallet that has a balance.
+### Additional Information
+The project as a whole is structured in a somewhat standard way for React.js applications, described in the following links. These links are not necessary to follow the tutorial, but may be interesting reading for some.
+* Libraries and Dependency Setup
+  * [https://github.com/verekia/js-stack-from-scratch/blob/master/tutorial/02-babel-es6-eslint-flow-jest-husky.md#readme]()
+* Folder Structure
+  * [https://jaysoo.ca/2016/02/28/organizing-redux-application/]()
+  * [https://jaysoo.ca/2016/02/28/applying-code-organization-rules-to-concrete-redux-code/]()
+  * [https://jaysoo.ca/2016/12/12/additional-guidelines-for-project-structure/]()
 
 ## Functionality Overview
 In this section, we’ll discuss the functionality we require and demonstrate how it is performed. There are two actors in this example, and both are shown on the same page. First, we will be simulating a company which is selling the upload service, and secondly, we will simulate a customer using that service.
 
 ### Company
 The company is providing the upload service. To do this, the company will require a seed for the company wallet. Ideally, the company payment address would be provided to the client from the server, but in our case, it is easier to allow entry of the company seed in the UI. To do so, open the panel on the right hand side of the screen and enter in a seed.
-Once the seed is entered, **the wallet data will be loaded** and a payment address will be generated. This will be populated in the main section of the application.
+Once the seed is entered, the wallet data will be loaded and a payment address will be generated. This will be populated in the main section of the application.
 
 ### Customer
 To use the upload service, the customer must provide a seed to a wallet that has a balance. Once the balance is verified, the upload portion of the application becomes active. The upload component is provided by http://uppy.io which has a slick interface allowing for multiple resumable uploads. Once the customer starts to upload the files, the software will monitor the upload progress, and after the threshold of 1 mb has been reached, it will pause the upload and create a transaction with a payment based on the number of bytes uploaded. Once the transaction is successful, the upload resumes until the 1mb threshold has been met again. When the file is fully uploaded, one final payment is made. 
 
 ## Code
-Now that we’ve had an overview of the application features, let’s take a look at some of the code. We will be focusing on the _wallet.js_, _payments.js_, _uploadManager.js_, and _uploader.js_ files. These files will be using APIs from [iota.lib.js](https://github.com/iotaledger/iota.lib.js) and [Uppy](https://github.com/transloadit/uppy). Feel free to review the docs for each if you need any further information. You will also likely notice the stateUpdater object in the following code samples. It is used to update the UI state.
+Now that we’ve had an overview of the application features, let’s take a look at some of the code. We will be focusing on the following files
+
+* _src/client/modules/wallet/wallet.js_
+* _src/client/modules/upload/PaidUpload.js_
+* _src/client/modules/upload/uploader.js_
+
+These files will be using APIs from [iota.lib.js](https://github.com/iotaledger/iota.lib.js) and [Uppy](https://github.com/transloadit/uppy). Feel free to review the docs for each if you need any further information. You will also likely notice the stateUpdater object in the following code samples. It is used to update the UI state.
 
 ### Generating the Company Address
 When a Company seed is entered and the Set Seed button is clicked,the setCompanySeed function is called, which updates the UI and makes a standard call to the iota.lib.js API to generate the address. This should be familiar to anyone who has read the [leaderboard example](https://learn.iota.org/tutorial/payments-and-messaging-leaderboard). After the address is generated, the UI is updated again.
@@ -139,7 +165,9 @@ constructor(fileId, upload) {
 ```
 
 ### Calculating Payment Due
-While the file is uploading, the `onProgress` handler we added in the `PaidUpload` constructor will be called periodically with the cumulative bytes that have been uploaded so far, as well as the total size of the file in bytes. We will need to determine whether the upload should continue or whether it should be paused and a payment should be made. In our app, we are going to charge users 1 IOTA for every MB uploaded. We will keep track of the number of bytes that have been paid with confirmed transactions, as well as the number of bytes that have pending payments. (Theoretically, uploads should only continue once a payment is confirmed, but due to the way the Uppy Dashboard works, uploads can be resumed before a payment is processed.) Once the number of unpaid bytes is calculated, we'll make a payment.
+While the file is uploading, the `onProgress` handler we added in the `PaidUpload` constructor will be called periodically with the cumulative bytes that have been uploaded so far, as well as the total size of the file in bytes. We will need to determine whether the upload should continue or whether it should be paused and a payment should be made. In our app, we are going to charge users 1 IOTA for every MB uploaded. We will keep track of the number of bytes that have been paid with confirmed transactions, as well as the number of bytes that have pending payments. (Theoretically, uploads should only continue once a payment is confirmed, but due to the way the Uppy Dashboard works, uploads can be resumed before a payment is processed.)
+
+Once the number of unpaid bytes is calculated, we'll make a payment. After the payment is made, the status will be returned in the callback. It will be one of _error_, _pending_, or _confirmed_. The payment status will be updated and if there was not an error in processing the payment, the upload will resume.
 
 ```javascript
 addBytesToUpload(bytesUploaded) {
@@ -165,9 +193,33 @@ getUnpaidBytes(bytesUploaded) {
 makePayment(unpaidBytes) {
   // Calculate the amount of IOTA due, rounding up.
   const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
-  // Call wallet API to complete the payment, generating a
-  // new payment id in the process
-  makePayment(this.fileId, this.getNextPaymentId(), paymentAmount)
+  // Generate payment id
+  const paymentId = this.getNextPaymentId()
+
+  // Add the payment as processing
+  this.payments[paymentId] = {
+    bytesPaid: paymentAmount * bytesForOneIota,
+    paymentId,
+    paymentAmount,
+    status: 'processing',
+  }
+
+  // Update the file data to reflect the payment
+  this.updateFileData()
+
+  // Call wallet API to complete the payment
+  makeWalletPayment(this.fileId, paymentId, paymentAmount, (status) => {
+    // Update payment status
+    this.payments[paymentId].status = status
+    // Update Paid Upload byte totals
+    this.updateFileData()
+
+    // If the payment attempt did not result in an error,
+    // resume the upload
+    if (status !== 'error') {
+      this.resumeUpload()
+    }
+  })
 }
 ```
 
@@ -197,3 +249,5 @@ complete(url) {
 1.	Currently, if the page is refreshed when an upload is paused, and the Customer resumes the upload, the application will charge the Customer for the full size of the file, instead of calculating previous payments. Use the file id added to the transactions in the previous exercise to calculate existing payments to ensure the Customer is charged fairly.
 1. Uppy has additional plugins for Dropbox and Google Drive. Enable the file uploader to get files from both.
 
+## Conclusion
+While the proof-of-concept described here has a few rough edges, it is sufficient enough to display that IOTA can be effectively be used for micropayments.

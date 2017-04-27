@@ -19,19 +19,24 @@ app.get('/', (req, res) => {
   res.send(renderApp(APP_NAME))
 })
 
+// Standard Tus Server
 const server = new tus.Server()
+// Set file storage and location
 server.datastore = new tus.FileStore({
   path: '/files',
 })
 
+// Handle initial uploads
 app.all('/files', (req, res) => {
   server.handle(req, res)
 })
 
+// Handle downloads and resumed uploads
 app.all('/files/*', (req, res) => {
   server.handle(req, res)
 })
 
+// Start web server and serve main page
 app.listen(WEB_PORT, () => {
   // eslint-disable-next-line no-console
   console.log(`Server running on port ${WEB_PORT} ${isProd ? '(production)' :

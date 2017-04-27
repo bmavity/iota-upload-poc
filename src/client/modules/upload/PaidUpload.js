@@ -89,8 +89,16 @@ export default class PaidUpload {
 
     // Call wallet API to complete the payment
     makePayment(this.fileId, paymentId, paymentAmount, (status) => {
+      // Update payment status
       this.payments[paymentId].status = status
+      // Update Paid Upload byte totals
       this.updateFileData()
+
+      // If the payment attempt did not result in an error,
+      // resume the upload
+      if (status !== 'error') {
+        this.resumeUpload()
+      }
     })
   }
 
