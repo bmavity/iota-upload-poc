@@ -1,11 +1,9 @@
 // @flow
-import { makePayment } from '../../modules/wallet'
-
 let toNotify
 let state = {
+  companyAddress: null,
   companyBalance: null,
   companySeed: null,
-  customerAddress: null,
   customerBalance: null,
   customerSeed: null,
   files: {},
@@ -32,44 +30,25 @@ function updateFile(fileId, paymentId, payment) {
 }
 
 export function getAppState() {
-  return state
+  return Object.assign({}, state)
 }
 
 export function connect(notifyOfStateChange: (state: any) => void) {
   toNotify = notifyOfStateChange
 }
 
-export const appActions = {
-  makePayment(fileId: string, paymentAmount: number) {
-    const file = state.files[fileId]
-    const payments = (file && file.payments) || {}
-    const paymentId = Object.keys(payments).length + 1
+
+export const stateUpdater = {
+  addPayment(fileId: string, paymentId: string, paymentAmount: number) {
     const updatedFile = updateFile(fileId, paymentId, {
       amount: paymentAmount,
       status: 'processing',
     })
-
-    // eslint-disable-next-line no-console
-    console.log(file, payments, updatedFile)
     updateState(mergeState({ files: Object.assign({}, state.files, { [fileId]: updatedFile }) }))
-
-    makePayment(state.customerSeed, state.customerAddress, paymentAmount, (err) => {
-      updateState(mergeState({
-        files: Object.assign({}, state.files, {
-          [fileId]: updateFile(fileId, paymentId, {
-            status: err ? 'error' : 'pending',
-          }),
-        }),
-      }))
-    })
   },
-}
-
-
-export const stateUpdater = {
   setCompanyAddress(address: string) {
     updateState(mergeState({
-      customerAddress: address,
+      companyAddress: address,
     }))
   },
   setCompanySeed(seed: string) {
@@ -85,6 +64,13 @@ export const stateUpdater = {
   setCustomerSeed(seed: string) {
     updateState(mergeState({
       customerSeed: seed,
+    }))
+  },
+  updatePaymentStatus(fileId: string, paymentId: string, status: string) {
+    updateState(mergeState({
+      files: Object.assign({}, state.files, {
+        [fileId]: updateFile(fileId, paymentId, { status }),
+      }),
     }))
   },
 }

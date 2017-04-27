@@ -154,7 +154,9 @@ addBytesToUpload(bytesUploaded) {
 makePayment(unpaidBytes) {
   // Calculate the amount of IOTA due, rounding up.
   const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
-  appActions.makePayment(this.fileId, paymentAmount)
+  // Call wallet API to complete the payment, generating a
+  // new payment id in the process
+  makePayment(this.fileId, this.getNextPaymentId(), paymentAmount)
 }
 ```
 

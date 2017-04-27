@@ -1,8 +1,9 @@
 // eslint-disable-next-line import/prefer-default-export
 export const appState = jest.genMockFromModule('../appState')
 
-export const appActions = {
-  makePayment: jest.fn(),
+export const stateUpdater = {
+  addPayment: jest.fn(),
+  updatePaymentStatus: jest.fn(),
 }
 
-appState.appActions = appActions
+appState.stateUpdater = stateUpdater

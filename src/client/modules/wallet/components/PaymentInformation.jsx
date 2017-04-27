@@ -7,8 +7,8 @@ import CustomerSeedEntry from './CustomerSeedEntry'
 import styles from './PaymentInformation.css'
 
 type Props = {
+  companyAddress: ?string,
   companySeed: ?string,
-  customerAddress: ?string,
   customerBalance: ?number,
   customerSeed: ?string,
 }

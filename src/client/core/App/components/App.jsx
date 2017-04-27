@@ -5,7 +5,7 @@ import Sidebar from 'react-sidebar'
 import AppHeader from './AppHeader'
 import { FileInformation } from '../../../modules/upload'
 import { PaymentInformation, WalletSidebar } from '../../../modules/wallet'
-import { appActions, connect, getAppState } from '../appState'
+import { connect, getAppState } from '../appState'
 
 import styles from './App.css'
 
@@ -39,7 +39,7 @@ export default class App extends Component {
           open={this.state.hasSidebarOpen}
           onSetOpen={isOpen => this.setSidebarVisibility(isOpen)}
           pullRight
-          sidebar={(<WalletSidebar {... this.state.appState} {... appActions} />)}
+          sidebar={(<WalletSidebar {... this.state.appState} />)}
         >
           <main>
             <AppHeader hasSidebarOpen={this.state.hasSidebarOpen} {... actions} />
@@ -53,10 +53,10 @@ export default class App extends Component {
                   <div className="row">
                     <div className={`col-xs-12 ${styles.appContent}`}>
                       <div className={styles.paymentInformation}>
-                        <PaymentInformation {... this.state.appState} {... appActions} />
+                        <PaymentInformation {... this.state.appState} />
                       </div>
                       <div className={styles.fileUploader}>
-                        <FileInformation {... this.state.appState} {... appActions} />
+                        <FileInformation {... this.state.appState} />
                       </div>
                     </div>
                   </div>

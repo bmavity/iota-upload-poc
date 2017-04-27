@@ -1,7 +1,7 @@
 import PaidUpload from '../PaidUpload'
-import { appActions } from '../../../core/App/appState'
+import { makePayment } from '../../wallet'
 
-jest.mock('../../../core/App/appState')
+jest.mock('../../wallet/wallet')
 
 
 function createUpload(onProgress) {
@@ -63,7 +63,7 @@ describe('PaidUpload, on upload progress, with unpaid bytes', () => {
   let upload
 
   beforeAll(() => {
-    appActions.makePayment.mockClear()
+    makePayment.mockClear()
     const unpaidBytes = 12000000
     const totalBytes = 36000000
 
@@ -78,6 +78,6 @@ describe('PaidUpload, on upload progress, with unpaid bytes', () => {
   })
 
   it('should make payment for unpaid bytes', () => {
-    expect(appActions.makePayment).toBeCalledWith('a file id 2', 12)
+    expect(makePayment).toBeCalledWith('a file id 2', 1, 12)
   })
 })

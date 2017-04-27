@@ -13,7 +13,7 @@ export default class WalletSidebar extends Component {
   static defaultProps = {
     companyBalance: null,
     companySeed: null,
-    customerAddress: null,
+    companyAddress: null,
   }
 
   state = {
@@ -21,9 +21,9 @@ export default class WalletSidebar extends Component {
   }
 
   props: {
+    companyAddress?: string,
     companyBalance?: number,
     companySeed?: string,
-    customerAddress?: string,
   }
 
   updateSeedValue(evt: Event & { currentTarget: HTMLInputElement }) {
@@ -32,9 +32,9 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
-    const { companyBalance, companySeed, customerAddress } = this.props
+    const { companyBalance, companySeed, companyAddress } = this.props
 
-    const isGeneratingAddress = customerAddress === null && companySeed !== null
+    const isGeneratingAddress = companyAddress === null && companySeed !== null
 
     const actions = {
       setCompanySeed: () => setCompanySeed(this.state.companySeed),
@@ -54,7 +54,7 @@ export default class WalletSidebar extends Component {
             isGeneratingAddress={isGeneratingAddress}
           />
           <CompanyAddressAndBalance
-            hasCustomerAddress={customerAddress !== null}
+            hasCompanyAddress={companyAddress !== null}
             companyBalance={companyBalance}
           />
         </ul>

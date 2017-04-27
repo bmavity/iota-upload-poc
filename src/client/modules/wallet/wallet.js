@@ -1,35 +1,28 @@
 import Iota from 'iota.lib.js'
 
-import { stateUpdater } from '../../core/App'
+import { getAppState, stateUpdater } from '../../core/App'
 import { iotaConfig } from '../../../shared/config'
 
 const iota = new Iota(iotaConfig)
 
 
-export function generateAddress(seed, cb) {
-  iota.api.getNewAddress(seed, { checksum: true }, (err, address) => {
-    if (err) return cb(err)
-
-    return cb(null, address)
-  })
-}
-
-
 // eslint-disable-next-line max-len
-export function makePayment(paymentSeed, customerAddress, value, cb) {
+export function makePayment(fileId, paymentId, paymentAmount) {
+  stateUpdater.addPayment(fileId, paymentId, paymentAmount)
+
+  const currentState = getAppState()
   const transfer = [{
-    address: customerAddress,
-    value: parseInt(value, 10),
+    address: currentState.companyAddress,
+    value: parseInt(paymentAmount, 10),
   }]
 
   // eslint-disable-next-line no-console
   console.log('Sending Transfer', transfer)
 
   // We send the transfer from this seed, with depth 4 and minWeightMagnitude 18
-  iota.api.sendTransfer(paymentSeed, 4, 18, transfer, (err) => {
-    if (err) return cb(err)
-
-    return cb(null, value)
+  iota.api.sendTransfer(currentState.customerSeed, 4, 18, transfer, (err) => {
+    const status = err ? 'error' : 'pending'
+    stateUpdater.updatePaymentStatus(fileId, paymentId, status)
   })
 }
 

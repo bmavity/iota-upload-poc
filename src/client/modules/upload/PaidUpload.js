@@ -1,4 +1,4 @@
-import { appActions } from '../../core/App/appState'
+import { makePayment } from '../wallet'
 
 const bytesForOneIota = 1000000
 
@@ -7,6 +7,7 @@ export default class PaidUpload {
   constructor(fileId, upload) {
     this.fileId = fileId
     this.upload = upload
+    this.currentPaymentId = 0
 
     // Initialize all byte fields to 0
     // assumes upload has not been resumed
@@ -42,10 +43,17 @@ export default class PaidUpload {
     }
   }
 
+  getNextPaymentId() {
+    this.currentPaymentId = this.currentPaymentId + 1
+    return this.currentPaymentId
+  }
+
   makePayment(unpaidBytes) {
     // Calculate the amount of IOTA due, rounding up.
     const paymentAmount = Math.ceil(parseInt(unpaidBytes, 10) / bytesForOneIota)
-    appActions.makePayment(this.fileId, paymentAmount)
+    // Call wallet API to complete the payment, generating a
+    // new payment id in the process
+    makePayment(this.fileId, this.getNextPaymentId(), paymentAmount)
   }
 
   pauseUpload() {
