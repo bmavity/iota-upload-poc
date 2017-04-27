@@ -12,6 +12,10 @@
   width: 300px;
 }
 
+:global(.sidebarComponent) {
+  z-index: 1010 !important;
+}
+
 .send {
   margin: 50px 200px;
   border-collapse: collapse;

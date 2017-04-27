@@ -39,6 +39,7 @@ export default class App extends Component {
           open={this.state.hasSidebarOpen}
           onSetOpen={isOpen => this.setSidebarVisibility(isOpen)}
           pullRight
+          sidebarClassName="sidebarComponent"
           sidebar={(<WalletSidebar {... this.state.appState} />)}
         >
           <main>

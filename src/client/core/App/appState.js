@@ -2,7 +2,8 @@
 let toNotify
 let state = {
   companyAddress: null,
-  companyBalance: null,
+  companyConfirmedBalance: null,
+  companyPendingBalance: null,
   companySeed: null,
   customerBalance: null,
   customerSeed: null,
@@ -45,6 +46,7 @@ export const stateUpdater = {
       status: 'processing',
     })
     updateState(mergeState({ files: Object.assign({}, state.files, { [fileId]: updatedFile }) }))
+    updateState(mergeState({ companyPendingBalance: state.companyPendingBalance + paymentAmount }))
   },
   setCompanyAddress(address: string) {
     updateState(mergeState({

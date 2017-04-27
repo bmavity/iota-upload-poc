@@ -11,7 +11,8 @@ import styles from './WalletSidebar.css'
 
 export default class WalletSidebar extends Component {
   static defaultProps = {
-    companyBalance: null,
+    companyConfirmedBalance: null,
+    companyPendingBalance: null,
     companySeed: null,
     companyAddress: null,
   }
@@ -22,7 +23,8 @@ export default class WalletSidebar extends Component {
 
   props: {
     companyAddress?: string,
-    companyBalance?: number,
+    companyConfirmedBalance?: number,
+    companyPendingBalance?: number,
     companySeed?: string,
   }
 
@@ -32,7 +34,8 @@ export default class WalletSidebar extends Component {
   }
 
   render() {
-    const { companyBalance, companySeed, companyAddress } = this.props
+    // eslint-disable-next-line max-len
+    const { companyConfirmedBalance, companyPendingBalance, companySeed, companyAddress } = this.props
 
     const isGeneratingAddress = companyAddress === null && companySeed !== null
 
@@ -55,7 +58,8 @@ export default class WalletSidebar extends Component {
           />
           <CompanyAddressAndBalance
             hasCompanyAddress={companyAddress !== null}
-            companyBalance={companyBalance}
+            companyConfirmedBalance={companyConfirmedBalance}
+            companyPendingBalance={companyPendingBalance}
           />
         </ul>
       </div>
