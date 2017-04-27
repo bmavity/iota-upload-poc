@@ -20,6 +20,12 @@ uppy.on('core:upload-started', (fileId, upload) => {
   uploaders[fileId] = new PaidUpload(fileId, upload)
 })
 
+// When a file is finished uploading, complete the PaidUpload
+uppy.on('core:upload-success', (fileId, url) => {
+  // Call complete method on matching file object
+  uploaders[fileId].complete(url)
+})
+
 
 export default uppy
 

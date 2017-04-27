@@ -10,10 +10,12 @@ export default class PaidUpload {
     this.upload = upload
     this.payments = {}
 
-    // Initialize all byte fields to 0
+    // Initialize all byte fields to 0 except total
     // assumes upload has not been resumed
     this.bytesPaid = 0
     this.bytesPendingPayment = 0
+    // eslint-disable-next-line no-underscore-dangle
+    this.bytesTotal = upload._size
     this.bytesUploaded = 0
 
     // Save original onProgress handler
@@ -30,11 +32,8 @@ export default class PaidUpload {
   }
 
   addBytesToUpload(bytesUploaded) {
-    // To avoid double charging Customers for uploaded bytes
-    // include the bytes that already have a transaction
-    // created or are "pending" confirm
-    const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
-    const unpaidBytes = bytesUploaded - totalPendingBytes
+    // Determine how many bytes need to be paid
+    const unpaidBytes = this.getUnpaidBytes(bytesUploaded)
 
     // If there are any bytes that have not been paid,
     // pause the upload and make a new payment
@@ -44,9 +43,31 @@ export default class PaidUpload {
     }
   }
 
+  complete(url) {
+    // store the download url for the file
+    this.url = url
+
+    // Determine how many bytes left that need to be paid
+    const unpaidBytes = this.getUnpaidBytes(this.bytesTotal)
+
+    // If there are any bytes that have not been paid,
+    // make a final payment
+    if (unpaidBytes > 0) {
+      this.makePayment(unpaidBytes)
+    }
+  }
+
   getNextPaymentId() {
     this.currentPaymentId = this.currentPaymentId + 1
     return this.currentPaymentId
+  }
+
+  getUnpaidBytes(bytesUploaded) {
+    // To avoid double charging Customers for uploaded bytes
+    // include the bytes that already have a transaction
+    // created or are "pending" confirm
+    const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
+    return bytesUploaded - totalPendingBytes
   }
 
   makePayment(unpaidBytes) {

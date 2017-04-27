@@ -84,6 +84,12 @@ uppy.on('core:upload-started', (fileId, upload) => {
   // that will keep track of progress and payments
   uploaders[fileId] = new PaidUpload(fileId, upload)
 })
+
+// When a file is finished uploading, complete the PaidUpload
+uppy.on('core:upload-success', (fileId, url) => {
+  // Call complete method on matching file object
+  uploaders[fileId].complete(url)
+})
 ```
 
 The Uppy UI (DashboardUI) we are using adds itself to the page when Uppy is initialized. Due to the use of React, the intialization code needs to be separated so that it can run when the DashboardUI is first displayed. The initilization code should ensure that the application has a nice UI, pausable/resumable uploads, and that it can get files from multiple places.
@@ -137,11 +143,8 @@ While the file is uploading, the `onProgress` handler we added in the `PaidUploa
 
 ```javascript
 addBytesToUpload(bytesUploaded) {
-  // To avoid double charging Customers for uploaded bytes
-  // include the bytes that already have a transaction
-  // created or are "pending" confirm
-  const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
-  const unpaidBytes = bytesUploaded - totalPendingBytes
+  // Determine how many bytes need to be paid
+  const unpaidBytes = this.getUnpaidBytes(bytesUploaded)
 
   // If there are any bytes that have not been paid,
   // pause the upload and make a new payment
@@ -149,6 +152,14 @@ addBytesToUpload(bytesUploaded) {
     this.pauseUpload()
     this.makePayment(unpaidBytes)
   }
+}
+
+getUnpaidBytes(bytesUploaded) {
+  // To avoid double charging Customers for uploaded bytes
+  // include the bytes that already have a transaction
+  // created or are "pending" confirm
+  const totalPendingBytes = this.bytesPaid + this.bytesPendingPayment
+  return bytesUploaded - totalPendingBytes
 }
 
 makePayment(unpaidBytes) {
@@ -160,6 +171,24 @@ makePayment(unpaidBytes) {
 }
 ```
 
+### Completing the Upload
+Once the upload is complete, the _*core:upload-success*_ handler will be called, which will then complete the upload.
+
+```javascript
+complete(url) {
+  // store the download url for the file
+  this.url = url
+
+  // Determine how many bytes left that need to be paid
+  const unpaidBytes = this.getUnpaidBytes(this.bytesTotal)
+
+  // If there are any bytes that have not been paid,
+  // make a final payment
+  if (unpaidBytes > 0) {
+    this.makePayment(unpaidBytes)
+  }
+}
+```
 
 ## Exercises
 1.	IOTA addresses are secure for multiple payments as long as nothing is spent from that address. To ensure that a company can spend in the middle of an upload:
