@@ -20,3 +20,5 @@ https://facebook.github.io/jest/docs/webpack.html
 
 Need an iota.wallet.config
 
+To make animated gifs
+https://github.com/dergachev/screengif
