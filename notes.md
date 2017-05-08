@@ -22,3 +22,4 @@ Need an iota.wallet.config
 
 To make animated gifs
 https://github.com/dergachev/screengif
+BE SURE TO USE RUBY 2.4.0
